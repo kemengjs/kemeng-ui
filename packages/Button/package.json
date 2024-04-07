@@ -1,0 +1,12 @@
+{
+  "main": "./dist/kemeng-ssr.cjs",
+  "module": "./dist/kemeng-ssr.mjs",
+  "exports": {
+    "import": "./dist/kemeng-ssr.mjs",
+    "require": "./dist/kemeng-ssr.cjs"
+  },
+  "scripts": {
+    "dev": "rollup --config ../../rollup.config.js --watch",
+    "build": "rollup --config ../../rollup.config.js"
+  }
+}
