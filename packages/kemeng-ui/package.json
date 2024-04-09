@@ -1,0 +1,35 @@
+{
+  "name": "@kemengjs/kemeng-ui",
+  "version": "0.0.1",
+  "description": "kemeng-ui 框架",
+  "main": "index.js",
+  "scripts": {
+    "dev": "rollup --config ./rollup.config.js --watch",
+    "build": "pnpm run clean && rollup --config ./rollup.config.js",
+    "clean": "rimraf ./dist"
+  },
+  "files": [
+    "*"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kemengjs/kemeng-ui.git"
+  },
+  "keywords": [],
+  "type": "module",
+  "author": "kemengwang <1148177968@qq.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.24.4",
+    "@babel/preset-env": "^7.24.4",
+    "@babel/preset-react": "^7.24.1",
+    "@babel/preset-typescript": "^7.24.1",
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-commonjs": "^25.0.7"
+  },
+  "peerDependencies": {
+    "@types/react": "^17.0.0 || ^18.0.0",
+    "react": "^17.0.0 || ^18.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0"
+  }
+}

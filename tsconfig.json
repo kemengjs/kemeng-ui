@@ -21,6 +21,7 @@
     "noUnusedLocals": false,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
+    "declaration": true,
     "baseUrl": ".",
     "paths": {
       "@/*": [
@@ -33,10 +34,8 @@
   },
   "include": [
     "packages/*",
+    "examples/*",
     "**/*.ts",
     "**/*.tsx",
-    "*.d.ts"
-, "server/utils.js", "server/server.js"],
-  "exclude": ["packages/create-kemeng-app/templates"]
-  // "references": [{ "path": "./tsconfig.node.json" }]
+    "*.d.ts"]
 }

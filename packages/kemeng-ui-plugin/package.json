@@ -1,0 +1,34 @@
+{
+  "name": "@kemengjs/kemeng-ui-plugin",
+  "version": "0.0.1",
+  "description": "kemeng-ui 插件",
+  "scripts": {
+    "dev": "rollup --config ../../rollup.config.js --watch",
+    "build": "rm -rf ./dist && rollup --config ../../rollup.config.js"
+  },
+  "main": "./dist/kemeng-ui-plugin.cjs",
+  "module": "./dist/kemeng-ui-plugin.mjs",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    "import": "./dist/kemeng-ui-plugin.mjs",
+    "require": "./dist/kemeng-ui-plugin.cjs",
+    "types": "./dist/types/index.d.ts"
+  },
+  "files": [
+    "*"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kemengjs/kemeng-ui.git"
+  },
+  "keywords": [],
+  "type": "module",
+  "author": "kemengwang <1148177968@qq.com>",
+  "license": "ISC",
+  "dependencies": {
+    "@rollup/pluginutils": "^5.0.4",
+    "@wyw-in-js/shared": "0.5.0",
+    "@wyw-in-js/transform": "0.5.0"
+  }
+}
+ 
