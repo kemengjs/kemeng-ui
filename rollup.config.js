@@ -39,7 +39,8 @@ export default defineConfig({
 			tsBuildInfoFile: path.join(appRootPath, './dist/tsconfig.tsbuildinfo'),
 			cacheDir: './node_modules/.rollup.tscache',
 			rootDir: appRootPath,
-			outputToFilesystem: true
+			outputToFilesystem: true,
+			declaration: true
 		})
 		// terser()
 	]
