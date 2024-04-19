@@ -35,5 +35,11 @@
     "examples/*",
     "**/*.ts",
     "**/*.tsx",
-    "*.d.ts"]
+    "*.d.ts"],
+  "exclude": ["**/dist/**"],
+  "ts-node": {
+    "compilerOptions": {
+        "module": "commonjs" 
+    }
+  }
 }

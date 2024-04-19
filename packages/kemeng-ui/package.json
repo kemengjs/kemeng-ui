@@ -2,15 +2,26 @@
   "name": "@kemengjs/kemeng-ui",
   "version": "0.0.1",
   "description": "kemeng-ui 框架",
-  "main": "index.js",
+  "main": "./index.ts",
   "scripts": {
-    "dev": "rollup --config ./rollup.config.js --watch",
-    "build": "pnpm run clean && rollup --config ./rollup.config.js",
-    "clean": "rimraf ./dist"
+    "dev": "gulp --gulpfile ./internal/build/gulpfile.ts dev",
+    "build": "gulp --require ../../node_modules/@esbuild-kit/cjs-loader -f ./internal/build/gulpfile.ts --cwd ./ build"
   },
   "files": [
     "*"
   ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./*": {
+      "types": "./dist/components/*/index.d.ts",
+      "import": "./dist/components/*/index.mjs",
+      "require": "./dist/components/*/index.js"
+    }
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/kemengjs/kemeng-ui.git"
@@ -25,9 +36,12 @@
     "@babel/preset-react": "^7.24.1",
     "@babel/preset-typescript": "^7.24.1",
     "@rollup/plugin-babel": "^6.0.4",
-    "@rollup/plugin-commonjs": "^25.0.7"
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "picocolors": "^1.0.0",
+    "ts-morph": "^22.0.0"
   },
   "peerDependencies": {
+    "@linaria/core": "^6.1.0",
     "@types/react": "^17.0.0 || ^18.0.0",
     "react": "^17.0.0 || ^18.0.0",
     "react-dom": "^17.0.0 || ^18.0.0"
