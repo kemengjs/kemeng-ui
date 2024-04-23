@@ -25,6 +25,9 @@
       "@/*": [
         "./*"
       ],
+      "@ui/*": [
+        "./packages/kemeng-ui/*"
+      ],
       "@core/*":[
         "./packages/core/*"
       ]
@@ -36,10 +39,5 @@
     "**/*.ts",
     "**/*.tsx",
     "*.d.ts"],
-  "exclude": ["**/dist/**"],
-  "ts-node": {
-    "compilerOptions": {
-        "module": "commonjs" 
-    }
-  }
+  "exclude": ["**/dist/**"]
 }

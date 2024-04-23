@@ -1,6 +1,8 @@
 import {
 	OutputOptions,
+	Plugin,
 	RollupBuild,
+	RollupOptions,
 	RollupWatcherEvent,
 	rollup,
 	watch
@@ -14,26 +16,40 @@ import babel from '@rollup/plugin-babel'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import dts from 'rollup-plugin-dts'
+import alias from '@rollup/plugin-alias'
+import peerDepsExternal from 'rollup-plugin-peer-deps-external'
 
 // rollup 相关参数
 const componentsDirPath = 'components'
 const entry = 'index.ts'
 const componentsNameArr = fs.readdirSync(resolve(componentsDirPath))
-const componentsEntryArr = componentsNameArr.map(item => {
-	return resolve(path.join(componentsDirPath, item, `index.ts`))
-})
+const componentsEntryMap = componentsNameArr.reduce((prev, cur) => {
+	prev[`components/${cur}/index`] = resolve(
+		path.join(componentsDirPath, cur, `index.ts`)
+	)
+	return prev
+}, {})
 
 const commonPlugins = [
+	peerDepsExternal() as unknown as Plugin,
+	alias({
+		entries: [
+			{
+				find: '@ui',
+				replacement: appRootPath
+			}
+		]
+	}),
 	nodeResolve(),
 	commonjs(),
 	typescript({
-		tsconfig: resolve('../../tsconfig.json'),
-		rootDir: appRootPath,
-		outputToFilesystem: true,
-		declaration: true,
-		include: ['components/**/*.ts', 'components/**/*.tsx'],
-		exclude: ['**/dist/**', '**/internal/**'],
-		outDir: './dist'
+		tsconfig: resolve('../../tsconfig.json')
+		// rootDir: appRootPath,
+		// outputToFilesystem: true,
+		// declaration: true,
+		// include: ['components/**/*.ts', 'components/**/*.tsx'],
+		// exclude: ['**/dist/**', '**/internal/**'],
+		// outDir: './dist'
 	}),
 	babel({
 		babelHelpers: 'bundled',
@@ -42,9 +58,12 @@ const commonPlugins = [
 	})
 ]
 
-export const baseConfig = {
-	input: [...componentsEntryArr],
-	external: [/react/, '@linaria/core']
+export const baseConfig: RollupOptions = {
+	input: {
+		index: entry,
+		...componentsEntryMap
+	},
+	external: [/node_modules/]
 }
 
 const inputOption = {
@@ -56,7 +75,9 @@ const outputMap: Record<string, OutputOptions | OutputOptions[]> = {
 	dts: {
 		dir: targetName,
 		format: 'esm',
-		entryFileNames: '[name].d.ts'
+		entryFileNames: '[name].d.ts',
+		preserveModules: true,
+		preserveModulesRoot: appRootPath
 	},
 	bundle: [
 		{
@@ -64,7 +85,7 @@ const outputMap: Record<string, OutputOptions | OutputOptions[]> = {
 			format: 'esm',
 			entryFileNames: '[name].mjs',
 			preserveModules: true,
-			preserveModulesRoot: 'components'
+			preserveModulesRoot: appRootPath
 		},
 		{
 			dir: targetName,
@@ -72,7 +93,7 @@ const outputMap: Record<string, OutputOptions | OutputOptions[]> = {
 			entryFileNames: '[name].cjs',
 			exports: 'named',
 			preserveModules: true,
-			preserveModulesRoot: 'components'
+			preserveModulesRoot: appRootPath
 		}
 	]
 }
@@ -106,9 +127,26 @@ export const bundleWatch = () => {
 			log('watching bundle complete~')
 		}
 	})
+
+	// const watcherDts = watch({
+	// 	...inputOption,
+	// 	plugins: [
+	// 		...inputOption.plugins,
+	// 		dts({
+	// 			tsconfig: resolve('../../tsconfig.json')
+	// 		})
+	// 	],
+	// 	output: outputMap.dts
+	// })
+
+	// watcherDts.on('event', (event: RollupWatcherEvent) => {
+	// 	const { result } = event as { result: RollupBuild }
+	// 	if (result) {
+	// 		result.close()
+	// 	}
+	// })
 }
 
-// 使用项目结构的形式 暂时不使用dts
 export const runRollupBuildDts = async () => {
 	log(`dtsBuild '${colors.cyan(`声明文件 生成中`)}' ...`)
 
@@ -123,21 +161,4 @@ export const runRollupBuildDts = async () => {
 	})
 	await bundle.write(outputMap.dts as OutputOptions)
 	bundle.close()
-
-	// const watcherDts = watch({
-	// 	...inputOption,
-	// 	plugins: [
-	// 		...inputOption.plugins,
-	// 		dts({
-	// 			tsconfig: resolve('../../tsconfig.json')
-	// 		})
-	// 	],
-	// 	output: outputMap.dts
-	// })
-
-	// watcherDts.on('event', ({ result }) => {
-	// 	if (result) {
-	// 		result.close()
-	// 	}
-	// })
 }

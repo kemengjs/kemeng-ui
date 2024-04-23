@@ -7,3 +7,6 @@ export * from './components/Button'
 
 export { default as Box } from './components/Box'
 export * from './components/Box'
+
+export { default as ThemePrivder } from './components/ThemePrivder'
+export * from './components/ThemePrivder'

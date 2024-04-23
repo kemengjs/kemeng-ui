@@ -22,6 +22,11 @@ export default defineConfig(() => {
 			assetsInlineLimit: 5 * 1024,
 			target: 'es2015'
 		},
-		plugins: [react(), kemengUIPlugin()]
+		plugins: [
+			react(),
+			kemengUIPlugin({
+				preprocessor: 'stylis'
+			})
+		]
 	}
 })

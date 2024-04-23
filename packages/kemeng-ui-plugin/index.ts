@@ -8,7 +8,7 @@ import { existsSync } from 'node:fs'
 import path from 'node:path'
 import { FilterPattern, createFilter } from '@rollup/pluginutils'
 import { Plugin, ViteDevServer, optimizeDeps } from 'vite'
-import { logger, syncResolve } from '@wyw-in-js/shared'
+import { ClassNameFn, logger, syncResolve } from '@wyw-in-js/shared'
 import {
 	createFileReporter,
 	getFileIdx,
@@ -125,12 +125,34 @@ export default function kemengUIPlugin({
 				log("resolve ❌ '%s'@'%s", what, importer)
 				throw new Error(`Could not resolve ${what}`)
 			}
+
+			const pluginOptions = rest
+			const classNameSlug = pluginOptions.classNameSlug
+
+			const keyword = 'kemeng-ui'
+
+			const classNameFnForKemeng: ClassNameFn = (hash, title, args) => {
+				if (args.file.includes(keyword)) {
+					return `kemengui-${title}`
+				}
+
+				if (typeof classNameSlug === 'string') {
+					return classNameSlug
+				}
+				if (typeof classNameSlug === 'function') {
+					return classNameSlug(hash, title, args)
+				}
+				return hash
+			}
+
+			pluginOptions.classNameSlug = classNameFnForKemeng
+
 			const transformServices = {
 				options: {
 					filename: id,
 					root: process.cwd(),
 					preprocessor,
-					pluginOptions: rest
+					pluginOptions
 				},
 				cache,
 				eventEmitter: emitter

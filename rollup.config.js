@@ -36,7 +36,7 @@ export default defineConfig({
 		typescript({
 			tsconfig: resolve('./tsconfig.json'),
 			outDir: './dist/types',
-			tsBuildInfoFile: path.join(appRootPath, './dist/tsconfig.tsbuildinfo'),
+			// tsBuildInfoFile: path.join(appRootPath, './dist/tsconfig.tsbuildinfo'),
 			cacheDir: './node_modules/.rollup.tscache',
 			rootDir: appRootPath,
 			outputToFilesystem: true,

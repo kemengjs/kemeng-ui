@@ -1,3 +1,3 @@
-export { default, guidi } from './Button'
+export { default } from './Button'
 
-export { default as Alert } from '../Alert'
+export * from './Button'

@@ -2,9 +2,11 @@ import { series, parallel, TaskFunction } from 'gulp'
 import colors from 'picocolors'
 import { removeSync } from 'fs-extra/esm'
 import { log, targetName } from './utils/utils'
-import { bundleWatch, runRollupBuildBundle } from './task/moduleBuild'
-
-// 搞P task定义
+import {
+	bundleWatch,
+	runRollupBuildBundle,
+	runRollupBuildDts
+} from './task/moduleBuild'
 
 const dev: TaskFunction = async cb => {
 	bundleWatch()
@@ -17,7 +19,7 @@ const clean: TaskFunction = cb => {
 	cb()
 }
 
-const build = series(clean, runRollupBuildBundle)
+const build = series(clean, parallel(runRollupBuildBundle, runRollupBuildDts))
 
 export { build }
 
