@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "rollup --config ./rollup.config.js --watch",
     "build": "rollup --config ./rollup.config.js",
-    "examples": "vite serve ./examples"
+    "examples": "vite serve ./examples",
+    "examples:build": "vite build ./examples",
+    "examples:preview": "vite preview ./examples"
   },
   "files": [
     "*"

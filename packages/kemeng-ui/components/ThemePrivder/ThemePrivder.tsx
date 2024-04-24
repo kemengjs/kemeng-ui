@@ -1,10 +1,10 @@
-import { css } from '@linaria/core'
 import { FC, ReactNode, useMemo } from 'react'
 import { globalCssText } from './globalCss'
-import { ThemeOptions } from './themeType'
+import { ThemeOptions, themeVariables } from '@ui/utils/theme'
 import { light } from './defaultTheme'
 import { mergeProps } from '../../utils/withDefaultProps'
 import { isObject } from '../../utils/validate'
+import { ThemeContext } from './themeContext'
 
 export type ThemePrivderProps = {
 	children?: ReactNode
@@ -15,7 +15,7 @@ const defaultProps: ThemePrivderProps = {
 	theme: light
 }
 
-const themeToThemeText = (theme: ThemeOptions) => {
+const themeToText = (theme: ThemeOptions) => {
 	let themeText = ''
 
 	Object.keys(theme).forEach(firstKey => {
@@ -37,17 +37,26 @@ const ThemePrivder: FC<ThemePrivderProps> = props => {
 	const { children, theme } = mergeProps(defaultProps, props)
 
 	const themeText = useMemo(() => {
-		return themeToThemeText(theme)
+		return themeToText(theme)
 	}, [theme])
 
-	const globalCss = css`
-		${globalCssText}
-	`
-	const root = css`
-		${themeText}
-	`
-
-	return <div>{children}</div>
+	return (
+		<ThemeContext.Provider value={theme}>
+			<style>
+				{`html {${themeText}}`}
+				{`html {
+					-webkit-font-smoothing: antialiased;
+					-moz-osx-font-smoothing: grayscale;
+					box-sizing: border-box;
+					-webkit-text-size-adjust: 100%;
+					-webkit-print-color-scheme: ${themeVariables.mode};
+					color-scheme: ${themeVariables.mode}};
+				}`}
+				{globalCssText}
+			</style>
+			{children}
+		</ThemeContext.Provider>
+	)
 }
 
 export default ThemePrivder

@@ -1,6 +1,7 @@
-import { ThemeOptions } from './themeType'
+import { ThemeOptions } from '../../utils'
 
 export const light: ThemeOptions = {
+	mode: 'light',
 	primary: {
 		main: '#FF5252',
 		light: '#FF8A80',

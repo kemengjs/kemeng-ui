@@ -12,6 +12,7 @@ import { NativeProps, withNativeProps } from '../../utils/nativeProps'
 import { mergeProps } from '../../utils/withDefaultProps'
 import { isPromise } from '../../utils/validate'
 import { styled } from '@linaria/atomic'
+import { BaseColorType, themeVariables } from '../../utils'
 
 export type ButtonRef = {
 	nativeElement: HTMLButtonElement | null
@@ -23,7 +24,7 @@ type NativeButtonProps = DetailedHTMLProps<
 >
 
 export type ButtonProps = {
-	color?: 'default' | 'primary' | 'success' | 'warning' | 'danger'
+	color?: BaseColorType
 	variant?: 'contained' | 'outline' | 'text'
 	size?: 'mini' | 'small' | 'middle' | 'large'
 	block?: boolean
@@ -44,7 +45,7 @@ export type ButtonProps = {
 	NativeProps
 
 const defaultProps: ButtonProps = {
-	color: 'default',
+	color: 'primary',
 	variant: 'contained',
 	block: false,
 	loading: false,
@@ -54,11 +55,48 @@ const defaultProps: ButtonProps = {
 	size: 'middle'
 }
 
-const Button = styled.button<{ isActive: boolean }>`
-	color: ${({ isActive }) => {
-		return !isActive ? 'red' : 'green'
-	}};
-	font-size: 16px;
+const Button = styled.button<ButtonProps>`
+	display: inline-flex;
+	-webkit-box-align: center;
+	align-items: center;
+	-webkit-box-pack: center;
+	justify-content: center;
+	position: relative;
+	box-sizing: border-box;
+	-webkit-tap-highlight-color: transparent;
+	outline: 0px;
+	border: 0px;
+	cursor: pointer;
+	user-select: none;
+	vertical-align: middle;
+	appearance: none;
+	text-decoration: none;
+	font-weight: 500;
+	font-size: 0.875rem;
+	line-height: 1.75;
+	letter-spacing: 0.02857em;
+	text-transform: uppercase;
+	min-width: 64px;
+	padding: 6px 16px;
+	border-radius: 4px;
+	transition:
+		background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+		box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+		border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+		color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+	color: ${({ color }) => themeVariables[color].contrastText};
+	background-color: ${themeVariables.primary.main};
+	box-shadow:
+		rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+		rgba(0, 0, 0, 0.14) 0px 2px 2px 0px,
+		rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+	&:hover {
+		background-color: ${themeVariables.primary.dark};
+		box-shadow:
+			rgba(0, 0, 0, 0.2) 0px 2px 4px -1px,
+			rgba(0, 0, 0, 0.14) 0px 4px 5px 0px,
+			rgba(0, 0, 0, 0.12) 0px 1px 10px 0px;
+	}
 `
 
 const KeMengButton = forwardRef<ButtonRef, ButtonProps>((p, ref) => {
@@ -91,10 +129,11 @@ const KeMengButton = forwardRef<ButtonRef, ButtonProps>((p, ref) => {
 		}
 	}
 
+	console.log('props', props)
+
 	return withNativeProps(
 		props,
 		<Button
-			isActive={true}
 			ref={nativeButtonRef}
 			type={props.type}
 			onClick={handleClick}
@@ -118,15 +157,18 @@ const KeMengButton = forwardRef<ButtonRef, ButtonProps>((p, ref) => {
 			onMouseUp={props.onMouseUp}
 			onTouchStart={props.onTouchStart}
 			onTouchEnd={props.onTouchEnd}
+			color={props.color}
 		>
-			{loading ? (
+			{/* {loading ? (
 				<div className={`-loading-wrapper`}>
 					{props.loadingIcon}
 					{props.loadingText}
 				</div>
 			) : (
 				<span>{props.children}</span>
-			)}
+			)} */}
+			{props.children}
+			<span>{}</span>
 		</Button>
 	)
 })
