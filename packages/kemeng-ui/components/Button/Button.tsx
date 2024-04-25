@@ -1,9 +1,13 @@
 import {
 	ButtonHTMLAttributes,
 	DetailedHTMLProps,
+	FocusEvent,
+	KeyboardEvent,
+	MouseEvent,
 	MouseEventHandler,
 	ReactNode,
 	forwardRef,
+	useEffect,
 	useImperativeHandle,
 	useRef,
 	useState
@@ -13,15 +17,23 @@ import { mergeProps } from '../../utils/withDefaultProps'
 import { isPromise } from '../../utils/validate'
 import { styled } from '@linaria/atomic'
 import { BaseColorType, themeVariables } from '../../utils'
+import TouchRipple, { TouchRippleProps } from './TouchRipple'
+import { k } from '../../utils/style'
+import { useEventCallback } from '../../hooks/useEventCallback'
 
 export type ButtonRef = {
 	nativeElement: HTMLButtonElement | null
+	focusVisible: () => void
 }
 
 type NativeButtonProps = DetailedHTMLProps<
 	ButtonHTMLAttributes<HTMLButtonElement>,
 	HTMLButtonElement
 >
+
+type HandeClick = (
+	event: MouseEvent<HTMLButtonElement, MouseEvent>
+) => void | Promise<void> | unknown
 
 export type ButtonProps = {
 	color?: BaseColorType
@@ -32,16 +44,16 @@ export type ButtonProps = {
 	loadingText?: string
 	loadingIcon?: ReactNode
 	disabled?: boolean
-	onClick?: (
-		event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-	) => void | Promise<void> | unknown
+	disableRipple?: boolean
+	disableTouchRipple?: boolean
+	focusRipple?: boolean
+	onClick?: HandeClick
 	type?: 'submit' | 'reset' | 'button'
 	shape?: 'default' | 'rounded' | 'rectangular'
 	children?: ReactNode
-} & Pick<
-	NativeButtonProps,
-	'onMouseDown' | 'onMouseUp' | 'onTouchStart' | 'onTouchEnd' | 'id'
-> &
+	touchRippleProps?: TouchRippleProps
+	centerRipple?: boolean
+} & Omit<NativeButtonProps, 'onClick'> &
 	NativeProps
 
 const defaultProps: ButtonProps = {
@@ -52,14 +64,17 @@ const defaultProps: ButtonProps = {
 	loadingIcon: '123',
 	type: 'button',
 	shape: 'default',
-	size: 'middle'
+	size: 'middle',
+	disabled: false,
+	disableRipple: false,
+	disableTouchRipple: false,
+	focusRipple: true,
+	centerRipple: false
 }
 
-const Button = styled.button<ButtonProps>`
+const ButtonRoot = styled.button<ButtonProps>`
 	display: inline-flex;
-	-webkit-box-align: center;
 	align-items: center;
-	-webkit-box-pack: center;
 	justify-content: center;
 	position: relative;
 	box-sizing: border-box;
@@ -71,6 +86,16 @@ const Button = styled.button<ButtonProps>`
 	vertical-align: middle;
 	appearance: none;
 	text-decoration: none;
+	&::-moz-focus-inner {
+		border-style: 'none';
+	}
+	&.${k('disabled')} {
+		pointer-events: 'none';
+		cursor: 'default';
+	}
+	@media print {
+		print-color-adjust: 'exact';
+	}
 	font-weight: 500;
 	font-size: 0.875rem;
 	line-height: 1.75;
@@ -85,13 +110,13 @@ const Button = styled.button<ButtonProps>`
 		border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
 		color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 	color: ${({ color }) => themeVariables[color].contrastText};
-	background-color: ${themeVariables.primary.main};
+	background-color: ${({ color }) => themeVariables[color].main};
 	box-shadow:
 		rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
 		rgba(0, 0, 0, 0.14) 0px 2px 2px 0px,
 		rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
 	&:hover {
-		background-color: ${themeVariables.primary.dark};
+		background-color: ${({ color }) => themeVariables[color].dark};
 		box-shadow:
 			rgba(0, 0, 0, 0.2) 0px 2px 4px -1px,
 			rgba(0, 0, 0, 0.14) 0px 4px 5px 0px,
@@ -99,23 +124,113 @@ const Button = styled.button<ButtonProps>`
 	}
 `
 
-const KeMengButton = forwardRef<ButtonRef, ButtonProps>((p, ref) => {
+const Button = forwardRef<ButtonRef, ButtonProps>((p, ref) => {
 	const props = mergeProps(defaultProps, p)
+	const {
+		loading: propLoading,
+		disableRipple,
+		disabled: propDisabled,
+		onMouseDown,
+		onContextMenu,
+		onDragLeave,
+		onMouseUp,
+		onMouseLeave,
+		onTouchStart,
+		onTouchEnd,
+		onBlur,
+		onTouchMove,
+		onClick,
+		color,
+		onKeyDown,
+		disableTouchRipple,
+		focusRipple,
+		onKeyUp,
+		touchRippleProps,
+		centerRipple,
+		...other
+	} = props
 	const [innerLoading, setInnerLoading] = useState(false)
 	const nativeButtonRef = useRef<HTMLButtonElement>(null)
-	const loading = props.loading === 'auto' ? innerLoading : props.loading
-	const disabled = props.disabled || loading
+	const [mountedState, setMountedState] = useState(false)
+	const loading = propLoading === 'auto' ? innerLoading : propLoading
+	const disabled = propDisabled || loading
+	const enableTouchRipple = mountedState && !disableRipple && !disabled
+
+	const rippleRef = useRef(null)
+
+	const [focusVisible, setFocusVisible] = useState(false)
+	if (disabled && focusVisible) {
+		setFocusVisible(false)
+	}
 
 	useImperativeHandle(ref, () => ({
 		get nativeElement() {
 			return nativeButtonRef.current
+		},
+
+		focusVisible: () => {
+			setFocusVisible(true)
+			nativeButtonRef.current.focus()
 		}
 	}))
 
-	const handleClick: MouseEventHandler<HTMLButtonElement> = async e => {
-		if (!props.onClick) return
+	useEffect(() => {
+		setMountedState(true)
+	}, [])
 
-		const promise = props.onClick(e)
+	function useRippleHandler(
+		rippleAction: 'start' | 'stop',
+		eventCallback: any,
+		skipRippleAction = disableTouchRipple
+	) {
+		return useEventCallback(event => {
+			if (eventCallback) {
+				eventCallback(event)
+			}
+
+			const ignore = skipRippleAction
+			if (!ignore && rippleRef.current) {
+				rippleRef.current[rippleAction](event)
+			}
+
+			return true
+		})
+	}
+
+	const handleMouseDown = useRippleHandler('start', onMouseDown)
+	const handleContextMenu = useRippleHandler('stop', onContextMenu)
+	const handleDragLeave = useRippleHandler('stop', onDragLeave)
+	const handleMouseUp = useRippleHandler('stop', onMouseUp)
+	const handleMouseLeave = useRippleHandler(
+		'stop',
+		(event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
+			if (focusVisible) {
+				event.preventDefault()
+			}
+			if (onMouseLeave) {
+				onMouseLeave(event)
+			}
+		}
+	)
+	const handleTouchStart = useRippleHandler('start', onTouchStart)
+	const handleTouchEnd = useRippleHandler('stop', onTouchEnd)
+	const handleTouchMove = useRippleHandler('stop', onTouchMove)
+
+	const handleBlur = useRippleHandler(
+		'stop',
+		(event: FocusEvent<HTMLButtonElement, Element>) => {
+			setFocusVisible(false)
+			if (onBlur) {
+				onBlur(event)
+			}
+		},
+		false
+	)
+
+	const handleClick: HandeClick = async e => {
+		if (!onClick) return
+
+		const promise = onClick(e)
 
 		if (isPromise(promise)) {
 			try {
@@ -129,14 +244,94 @@ const KeMengButton = forwardRef<ButtonRef, ButtonProps>((p, ref) => {
 		}
 	}
 
-	console.log('props', props)
+	const keydownRef = useRef(false)
+	const handleKeyDown = useEventCallback(
+		(event: KeyboardEvent<HTMLButtonElement>) => {
+			// Check if key is already down to avoid repeats being counted as multiple activations
+			if (
+				focusRipple &&
+				!keydownRef.current &&
+				focusVisible &&
+				rippleRef.current &&
+				event.key === ' '
+			) {
+				keydownRef.current = true
+				rippleRef.current.stop(event, () => {
+					rippleRef.current.start(event)
+				})
+			}
+
+			if (event.target === event.currentTarget && event.key === ' ') {
+				event.preventDefault()
+			}
+
+			if (onKeyDown) {
+				onKeyDown(event)
+			}
+
+			// Keyboard accessibility for non interactive elements
+			if (
+				event.target === event.currentTarget &&
+				event.key === 'Enter' &&
+				!disabled
+			) {
+				event.preventDefault()
+				if (onClick) {
+					onClick(event as unknown as MouseEvent<HTMLButtonElement, MouseEvent>)
+				}
+			}
+		}
+	)
+
+	const handleKeyUp = useEventCallback(
+		(event: KeyboardEvent<HTMLButtonElement>) => {
+			// calling preventDefault in keyUp on a <button> will not dispatch a click event if Space is pressed
+			// https://codesandbox.io/p/sandbox/button-keyup-preventdefault-dn7f0
+			if (
+				focusRipple &&
+				event.key === ' ' &&
+				rippleRef.current &&
+				focusVisible &&
+				!event.defaultPrevented
+			) {
+				keydownRef.current = false
+				rippleRef.current.stop(event, () => {
+					rippleRef.current.pulsate(event)
+				})
+			}
+			if (onKeyUp) {
+				onKeyUp(event)
+			}
+
+			// Keyboard accessibility for non interactive elements
+			if (
+				onClick &&
+				event.target === event.currentTarget &&
+				event.key === ' ' &&
+				!event.defaultPrevented
+			) {
+				onClick(event as unknown as MouseEvent<HTMLButtonElement, MouseEvent>)
+			}
+		}
+	)
 
 	return withNativeProps(
 		props,
-		<Button
+		<ButtonRoot
 			ref={nativeButtonRef}
 			type={props.type}
-			onClick={handleClick}
+			onBlur={handleBlur}
+			onClick={handleClick as MouseEventHandler<HTMLButtonElement> & HandeClick}
+			onContextMenu={handleContextMenu}
+			onKeyDown={handleKeyDown}
+			onKeyUp={handleKeyUp}
+			onMouseDown={handleMouseDown}
+			onMouseLeave={handleMouseLeave}
+			onMouseUp={handleMouseUp}
+			onDragLeave={handleDragLeave}
+			onTouchEnd={handleTouchEnd}
+			onTouchMove={handleTouchMove}
+			onTouchStart={handleTouchStart}
 			// className={classNames(
 			// 	classPrefix,
 			// 	{
@@ -153,11 +348,8 @@ const KeMengButton = forwardRef<ButtonRef, ButtonProps>((p, ref) => {
 			// 	`${classPrefix}-shape-${props.shape}`
 			// )}
 			disabled={disabled}
-			onMouseDown={props.onMouseDown}
-			onMouseUp={props.onMouseUp}
-			onTouchStart={props.onTouchStart}
-			onTouchEnd={props.onTouchEnd}
-			color={props.color}
+			color={color}
+			{...other}
 		>
 			{/* {loading ? (
 				<div className={`-loading-wrapper`}>
@@ -168,9 +360,16 @@ const KeMengButton = forwardRef<ButtonRef, ButtonProps>((p, ref) => {
 				<span>{props.children}</span>
 			)} */}
 			{props.children}
-			<span>{}</span>
-		</Button>
+			{enableTouchRipple ? (
+				/* TouchRipple is only needed client-side, x2 boost on the server. */
+				<TouchRipple
+					ref={rippleRef}
+					center={centerRipple}
+					{...touchRippleProps}
+				/>
+			) : null}
+		</ButtonRoot>
 	)
 })
 
-export default KeMengButton
+export default Button

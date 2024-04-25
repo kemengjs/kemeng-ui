@@ -25,6 +25,27 @@ export type ThemeOptions = {
 		icon?: string
 	}
 	divider?: string
+	transition?: {
+		easeInOut?: string
+		easeOut?: string
+		easeIn?: string
+		sharp?: string
+		shortest?: number
+		shorter?: number
+		short?: number
+		standard?: number
+		complex?: number
+		enteringScreen?: number
+		leavingScreen?: number
+	}
+}
+
+type ThemeVariables = {
+	[K in keyof ThemeOptions]: ThemeOptions[K] extends object
+		? {
+				[T in keyof ThemeOptions[K]]: string
+			}
+		: string
 }
 
 export type BaseColorType = keyof Pick<
@@ -32,9 +53,7 @@ export type BaseColorType = keyof Pick<
 	'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning'
 >
 
-export const themeVariables: Omit<ThemeOptions, 'mode'> & {
-	mode: string
-} = {
+export const themeVariables: ThemeVariables = {
 	mode: 'var(--mode)',
 	primary: {
 		main: 'var(--primary-main)',
@@ -82,5 +101,18 @@ export const themeVariables: Omit<ThemeOptions, 'mode'> & {
 		disabled: 'var(--text-disabled)',
 		icon: 'var(--text-icon)'
 	},
-	divider: 'var(--divider)'
+	divider: 'var(--divider)',
+	transition: {
+		easeInOut: 'var(--transition-easeInOut)',
+		easeOut: 'var(--transition-easeOut)',
+		easeIn: 'var(--transition-easeIn)',
+		sharp: 'var(--transition-sharp)',
+		shortest: 'var(--transition-shortest)',
+		shorter: 'var(--transition-shorter)',
+		short: 'var(--transition-short)',
+		standard: 'var(--transition-standard)',
+		complex: 'var(--transition-complex)',
+		enteringScreen: 'var(--transition-enteringScreen)',
+		leavingScreen: 'var(--transition-leavingScreen)'
+	}
 }

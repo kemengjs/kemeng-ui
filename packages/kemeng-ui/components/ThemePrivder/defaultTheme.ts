@@ -20,6 +20,12 @@ export const light: ThemeOptions = {
 		light: '#F57C00',
 		contrastText: '#fff'
 	},
+	success: {
+		main: '#76FF03',
+		dark: '#64DD17',
+		light: '#B2FF59',
+		contrastText: '#000'
+	},
 	error: {
 		main: '#FF3D00',
 		dark: '#DD2C00',
@@ -41,5 +47,18 @@ export const light: ThemeOptions = {
 		secondary: 'rgba(0,0,0,0.7)',
 		disabled: 'rgba(0,0,0,0.38)'
 	},
-	divider: 'rgba(0,0,0,0.12)'
+	divider: 'rgba(0,0,0,0.12)',
+	transition: {
+		easeInOut: 'cubic-bezier(0.4, 0, 0.2, 1)',
+		easeOut: 'cubic-bezier(0.0, 0, 0.2, 1)',
+		easeIn: 'cubic-bezier(0.4, 0, 1, 1)',
+		sharp: 'cubic-bezier(0.4, 0, 0.6, 1)',
+		shortest: 150,
+		shorter: 200,
+		short: 250,
+		standard: 300,
+		complex: 375,
+		enteringScreen: 225,
+		leavingScreen: 195
+	}
 }

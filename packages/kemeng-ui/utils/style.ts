@@ -1,4 +1,5 @@
-// export const getColor = ()=>{
+export const tag = 'kemengui'
 
-//   ret
-// }
+export const k = (styleName: string) => {
+	return `${tag}-${styleName}`
+}

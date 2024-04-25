@@ -133,7 +133,11 @@ export default function kemengUIPlugin({
 
 			const classNameFnForKemeng: ClassNameFn = (hash, title, args) => {
 				if (args.file.includes(keyword)) {
-					return `kemengui-${title}`
+					const firstChar = title.charAt(0).toLowerCase()
+					const restOfTitle = title.slice(1)
+					const targetTitle = firstChar + restOfTitle
+
+					return `kemengui-${targetTitle}`
 				}
 
 				if (typeof classNameSlug === 'string') {
