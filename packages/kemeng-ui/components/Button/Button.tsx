@@ -4,7 +4,6 @@ import {
 	FocusEvent,
 	KeyboardEvent,
 	MouseEvent,
-	MouseEventHandler,
 	ReactNode,
 	forwardRef,
 	useEffect,
@@ -14,11 +13,10 @@ import {
 } from 'react'
 import { NativeProps, withNativeProps } from '../../utils/nativeProps'
 import { mergeProps } from '../../utils/withDefaultProps'
-import { isPromise } from '../../utils/validate'
-import { styled } from '@linaria/atomic'
+import { cx, styled } from '@linaria/atomic'
 import { BaseColorType, themeVariables } from '../../utils'
 import TouchRipple, { TouchRippleProps } from './TouchRipple'
-import { k } from '../../utils/style'
+import { getK } from '../../utils/style'
 import { useEventCallback } from '../../hooks/useEventCallback'
 
 export type ButtonRef = {
@@ -31,45 +29,49 @@ type NativeButtonProps = DetailedHTMLProps<
 	HTMLButtonElement
 >
 
-type HandeClick = (
-	event: MouseEvent<HTMLButtonElement, MouseEvent>
-) => void | Promise<void> | unknown
+const k = getK('button')
 
 export type ButtonProps = {
 	color?: BaseColorType
-	variant?: 'contained' | 'outline' | 'text'
-	size?: 'mini' | 'small' | 'middle' | 'large'
-	block?: boolean
-	loading?: boolean | 'auto'
-	loadingText?: string
-	loadingIcon?: ReactNode
+	variant?: 'contained' | 'outlined' | 'text'
+	size?: 'small' | 'medium' | 'large'
 	disabled?: boolean
 	disableRipple?: boolean
 	disableTouchRipple?: boolean
 	focusRipple?: boolean
-	onClick?: HandeClick
 	type?: 'submit' | 'reset' | 'button'
-	shape?: 'default' | 'rounded' | 'rectangular'
 	children?: ReactNode
 	touchRippleProps?: TouchRippleProps
 	centerRipple?: boolean
-} & Omit<NativeButtonProps, 'onClick'> &
+	fullWidth?: boolean
+	endIcon?: ReactNode
+	startIcon?: ReactNode
+} & NativeButtonProps &
 	NativeProps
 
 const defaultProps: ButtonProps = {
 	color: 'primary',
 	variant: 'contained',
-	block: false,
-	loading: false,
-	loadingIcon: '123',
 	type: 'button',
-	shape: 'default',
-	size: 'middle',
+	size: 'medium',
 	disabled: false,
 	disableRipple: false,
 	disableTouchRipple: false,
 	focusRipple: true,
 	centerRipple: false
+}
+
+const getSizeStyles = (small: string, large: string) => {
+	return {
+		[`&.${k('small')}`]: {
+			padding: small,
+			fontSize: `${13 / 16}rem`
+		},
+		[`&.${k('large')}`]: {
+			padding: large,
+			fontSize: `${15 / 16}rem`
+		}
+	}
 }
 
 const ButtonRoot = styled.button<ButtonProps>`
@@ -87,14 +89,14 @@ const ButtonRoot = styled.button<ButtonProps>`
 	appearance: none;
 	text-decoration: none;
 	&::-moz-focus-inner {
-		border-style: 'none';
+		border-style: none;
 	}
 	&.${k('disabled')} {
-		pointer-events: 'none';
-		cursor: 'default';
+		pointer-events: none;
+		cursor: default;
 	}
 	@media print {
-		print-color-adjust: 'exact';
+		print-color-adjust: exact;
 	}
 	font-weight: 500;
 	font-size: 0.875rem;
@@ -103,31 +105,118 @@ const ButtonRoot = styled.button<ButtonProps>`
 	text-transform: uppercase;
 	min-width: 64px;
 	padding: 6px 16px;
-	border-radius: 4px;
+	border-radius: ${themeVariables.shape.borderRadius};
 	transition:
-		background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
-		box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
-		border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
-		color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-	color: ${({ color }) => themeVariables[color].contrastText};
-	background-color: ${({ color }) => themeVariables[color].main};
-	box-shadow:
-		rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
-		rgba(0, 0, 0, 0.14) 0px 2px 2px 0px,
-		rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
-	&:hover {
-		background-color: ${({ color }) => themeVariables[color].dark};
-		box-shadow:
-			rgba(0, 0, 0, 0.2) 0px 2px 4px -1px,
-			rgba(0, 0, 0, 0.14) 0px 4px 5px 0px,
-			rgba(0, 0, 0, 0.12) 0px 1px 10px 0px;
+		background-color ${themeVariables.transition.short}
+			${themeVariables.transition.easeInOut} 0ms,
+		box-shadow ${themeVariables.transition.short}
+			${themeVariables.transition.easeInOut} 0ms,
+		border-color ${themeVariables.transition.short}
+			${themeVariables.transition.easeInOut} 0ms,
+		color ${themeVariables.transition.short}
+			${themeVariables.transition.easeInOut} 0ms;
+
+	&.${k('contained')} {
+		color: ${({ color }) => themeVariables[color].contrastText};
+		background-color: ${({ color }) => themeVariables[color].main};
+		box-shadow: ${themeVariables.shadows[2]};
+		&:hover {
+			background-color: ${({ color }) => themeVariables[color].dark};
+			box-shadow: ${themeVariables.shadows[4]};
+			@media (hover: none) {
+				box-shadow: ${themeVariables.shadows[2]};
+			}
+		}
+
+		&:active {
+			box-shadow: ${themeVariables.shadows[8]};
+		}
+
+		&.${k('disabled')} {
+			box-shadow: ${themeVariables.shadows[0]};
+			background-color: ${themeVariables.action.disabledBackground};
+			color: ${themeVariables.action.disabled};
+		}
+		&.${k('focusVisible')} {
+			box-shadow: ${themeVariables.shadows[6]};
+		}
+		${getSizeStyles('4px 10px', '8px 22px')}
 	}
+
+	&.${k('outlined')} {
+		padding: 5px 15px;
+		border: 1px solid currentColor;
+		background-color: transparent;
+		color: ${({ color }) => themeVariables[color].main};
+
+		&:hover {
+			background-color: ${({ color }) =>
+				`rgba(${themeVariables[color].mainRgb},${themeVariables.action.hoverOpacity})`};
+		}
+
+		&.${k('disabled')} {
+			border: 1px solid ${themeVariables.action.disabledBackground};
+		}
+		${getSizeStyles('3px 9px', '7px 21px')}
+	}
+
+	&.${k('text')} {
+		padding: 6px 8px;
+		color: ${({ color }) => themeVariables[color].main};
+		background-color: transparent;
+		&:hover {
+			background-color: ${({ color }) =>
+				`rgba(${themeVariables[color].mainRgb},${themeVariables.action.hoverOpacity})`};
+		}
+
+		${getSizeStyles('4px 5px', '8px 11px')}
+	}
+
+	&.${k('disabled')} {
+		color: ${themeVariables.action.disabled};
+	}
+
+	&.${k('fullWidth')} {
+		width: 100%;
+	}
+`
+
+const commonIconStyles = {
+	[`&.${k('iconSmall')} > *:nth-of-type(1)`]: {
+		fontSize: '18px'
+	},
+	[`&.${k('iconMedium')} > *:nth-of-type(1)`]: {
+		fontSize: '20px'
+	},
+	[`&.${k('iconLarge')} > *:nth-of-type(1)`]: {
+		fontSize: '22px'
+	}
+}
+
+const ButtonStartIcon = styled.span`
+	display: inherit;
+	margin-right: 8px;
+	margin-left: -4px;
+
+	&.${k('iconSmall')} {
+		margin-left: -2px;
+	}
+	${commonIconStyles}
+`
+const ButtonEndIcon = styled.span`
+	display: inherit;
+	margin-right: -4px;
+	margin-left: 8px;
+
+	&.${k('iconSmall')} {
+		margin-right: -2px;
+	}
+	${commonIconStyles}
 `
 
 const Button = forwardRef<ButtonRef, ButtonProps>((p, ref) => {
 	const props = mergeProps(defaultProps, p)
 	const {
-		loading: propLoading,
 		disableRipple,
 		disabled: propDisabled,
 		onMouseDown,
@@ -147,13 +236,15 @@ const Button = forwardRef<ButtonRef, ButtonProps>((p, ref) => {
 		onKeyUp,
 		touchRippleProps,
 		centerRipple,
+		variant,
+		size,
+		startIcon,
+		endIcon,
 		...other
 	} = props
-	const [innerLoading, setInnerLoading] = useState(false)
 	const nativeButtonRef = useRef<HTMLButtonElement>(null)
 	const [mountedState, setMountedState] = useState(false)
-	const loading = propLoading === 'auto' ? innerLoading : propLoading
-	const disabled = propDisabled || loading
+	const disabled = propDisabled
 	const enableTouchRipple = mountedState && !disableRipple && !disabled
 
 	const rippleRef = useRef(null)
@@ -227,23 +318,6 @@ const Button = forwardRef<ButtonRef, ButtonProps>((p, ref) => {
 		false
 	)
 
-	const handleClick: HandeClick = async e => {
-		if (!onClick) return
-
-		const promise = onClick(e)
-
-		if (isPromise(promise)) {
-			try {
-				setInnerLoading(true)
-				await promise
-				setInnerLoading(false)
-			} catch (e) {
-				setInnerLoading(false)
-				throw e
-			}
-		}
-	}
-
 	const keydownRef = useRef(false)
 	const handleKeyDown = useEventCallback(
 		(event: KeyboardEvent<HTMLButtonElement>) => {
@@ -277,7 +351,12 @@ const Button = forwardRef<ButtonRef, ButtonProps>((p, ref) => {
 			) {
 				event.preventDefault()
 				if (onClick) {
-					onClick(event as unknown as MouseEvent<HTMLButtonElement, MouseEvent>)
+					onClick(
+						event as unknown as MouseEvent<
+							HTMLButtonElement,
+							globalThis.MouseEvent
+						>
+					)
 				}
 			}
 		}
@@ -310,7 +389,12 @@ const Button = forwardRef<ButtonRef, ButtonProps>((p, ref) => {
 				event.key === ' ' &&
 				!event.defaultPrevented
 			) {
-				onClick(event as unknown as MouseEvent<HTMLButtonElement, MouseEvent>)
+				onClick(
+					event as unknown as MouseEvent<
+						HTMLButtonElement,
+						globalThis.MouseEvent
+					>
+				)
 			}
 		}
 	)
@@ -321,7 +405,7 @@ const Button = forwardRef<ButtonRef, ButtonProps>((p, ref) => {
 			ref={nativeButtonRef}
 			type={props.type}
 			onBlur={handleBlur}
-			onClick={handleClick as MouseEventHandler<HTMLButtonElement> & HandeClick}
+			onClick={onClick}
 			onContextMenu={handleContextMenu}
 			onKeyDown={handleKeyDown}
 			onKeyUp={handleKeyUp}
@@ -332,34 +416,23 @@ const Button = forwardRef<ButtonRef, ButtonProps>((p, ref) => {
 			onTouchEnd={handleTouchEnd}
 			onTouchMove={handleTouchMove}
 			onTouchStart={handleTouchStart}
-			// className={classNames(
-			// 	classPrefix,
-			// 	{
-			// 		[`${classPrefix}-${props.color}`]: props.color,
-			// 		[`${classPrefix}-block`]: props.block,
-			// 		[`${classPrefix}-disabled`]: disabled,
-			// 		[`${classPrefix}-variant-outline`]: props.variant === 'outline',
-			// 		[`${classPrefix}-variant-none`]: props.variant === 'none',
-			// 		[`${classPrefix}-mini`]: props.size === 'mini',
-			// 		[`${classPrefix}-small`]: props.size === 'small',
-			// 		[`${classPrefix}-large`]: props.size === 'large',
-			// 		[`${classPrefix}-loading`]: loading
-			// 	},
-			// 	`${classPrefix}-shape-${props.shape}`
-			// )}
 			disabled={disabled}
 			color={color}
+			tabIndex={disabled ? -1 : props.tabIndex}
 			{...other}
+			className={cx(
+				disabled && k('disabled'),
+				variant === 'contained'
+					? k('contained')
+					: variant === 'text'
+						? k('text')
+						: k('outlined'),
+				size === 'medium' ? '' : size === 'large' ? k('large') : k('small')
+			)}
 		>
-			{/* {loading ? (
-				<div className={`-loading-wrapper`}>
-					{props.loadingIcon}
-					{props.loadingText}
-				</div>
-			) : (
-				<span>{props.children}</span>
-			)} */}
+			{startIcon && <ButtonStartIcon>{startIcon}</ButtonStartIcon>}
 			{props.children}
+			{endIcon && <ButtonEndIcon>{endIcon}</ButtonEndIcon>}
 			{enableTouchRipple ? (
 				/* TouchRipple is only needed client-side, x2 boost on the server. */
 				<TouchRipple

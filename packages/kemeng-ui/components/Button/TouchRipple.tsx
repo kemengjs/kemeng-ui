@@ -10,14 +10,15 @@ import {
 	useState
 } from 'react'
 import Ripple from './Ripple'
-import { k } from '../../utils/style'
 import { TransitionGroup } from 'react-transition-group'
 import { useTimeout } from '../../hooks/useTimeout'
+import { themeVariables } from '../../utils'
+import { getK } from '../../utils/style'
 
 const DURATION = 550
 export const DELAY_RIPPLE = 80
 
-const RpplePulsateDuration = 200
+const k = getK('touchRipple')
 
 const TouchRippleRoot = styled.span`
 	overflow: hidden;
@@ -76,11 +77,11 @@ export const TouchRippleRipple = styled(Ripple)`
 		transform: scale(1);
 		animation-name: enterKeyframe;
 		animation-duration: ${DURATION}ms;
-		animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+		animation-timing-function: ${themeVariables.transition.easeInOut};
 	}
 
 	&.${k('ripplePulsate')} {
-		animation-duration: ${RpplePulsateDuration}ms;
+		animation-duration: ${themeVariables.transition.shorter};
 	}
 
 	& .${k('child')} {
@@ -96,7 +97,7 @@ export const TouchRippleRipple = styled(Ripple)`
 		opacity: 0;
 		animation-name: exitKeyframe;
 		animation-duration: ${DURATION}ms;
-		animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+		animation-timing-function: ${themeVariables.transition.easeInOut};
 	}
 
 	& .${k('childPulsate')} {
@@ -106,7 +107,7 @@ export const TouchRippleRipple = styled(Ripple)`
 		top: 0;
 		animation-name: pulsateKeyframe;
 		animation-duration: 2500ms;
-		animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+		animation-timing-function: ${themeVariables.transition.easeInOut};
 		animation-iteration-count: infinite;
 		animation-delay: 200ms;
 	}
@@ -341,7 +342,7 @@ const TouchRipple = forwardRef<TouchRippleRef, TouchRippleProps>(
 
 		return (
 			<TouchRippleRoot
-				className={cx(k('root, classes.root, className'))}
+				className={cx(classes.root, className)}
 				ref={container}
 				{...other}
 			>

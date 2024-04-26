@@ -6,37 +6,43 @@ export const light: ThemeOptions = {
 		main: '#FF5252',
 		light: '#FF8A80',
 		dark: '#FF1744',
-		contrastText: '#fff'
+		contrastText: '#fff',
+		mainRgb: '255, 82, 82'
 	},
 	secondary: {
 		main: '#29B6F6',
 		dark: '#039BE5',
 		light: '#81D4FA',
-		contrastText: '#fff'
+		contrastText: '#fff',
+		mainRgb: '41, 182, 246'
 	},
 	warning: {
 		main: '#EF6C00',
 		dark: '#E65100',
 		light: '#F57C00',
-		contrastText: '#fff'
+		contrastText: '#fff',
+		mainRgb: '239, 108, 0'
 	},
 	success: {
 		main: '#76FF03',
 		dark: '#64DD17',
 		light: '#B2FF59',
-		contrastText: '#000'
+		contrastText: '#000',
+		mainRgb: '118, 255, 3'
 	},
 	error: {
 		main: '#FF3D00',
 		dark: '#DD2C00',
 		light: '#FF6E40',
-		contrastText: '#fff'
+		contrastText: '#fff',
+		mainRgb: '255, 61, 0'
 	},
 	info: {
 		main: '#FF4081',
 		dark: '#F50057',
 		light: '#FF80AB',
-		contrastText: '#fff'
+		contrastText: '#fff',
+		mainRgb: '255, 64, 129'
 	},
 	background: {
 		paper: '#fff',
@@ -48,17 +54,39 @@ export const light: ThemeOptions = {
 		disabled: 'rgba(0,0,0,0.38)'
 	},
 	divider: 'rgba(0,0,0,0.12)',
+	shape: {
+		borderRadius: '4px'
+	},
 	transition: {
 		easeInOut: 'cubic-bezier(0.4, 0, 0.2, 1)',
 		easeOut: 'cubic-bezier(0.0, 0, 0.2, 1)',
 		easeIn: 'cubic-bezier(0.4, 0, 1, 1)',
 		sharp: 'cubic-bezier(0.4, 0, 0.6, 1)',
-		shortest: 150,
-		shorter: 200,
-		short: 250,
-		standard: 300,
-		complex: 375,
-		enteringScreen: 225,
-		leavingScreen: 195
+		shortest: '150ms',
+		shorter: '200ms',
+		short: '250ms',
+		standard: '300ms',
+		complex: '375ms',
+		enteringScreen: '225ms',
+		leavingScreen: '195ms'
+	},
+	action: {
+		active: 'rgba(0,0,0,0.54)',
+		hover: 'rgba(0,0,0,0.04)',
+		disabled: 'rgba(0,0,0,0.26)',
+		disabledBackground: 'rgba(0,0,0,0.12)',
+		disabledOpacity: 0.38,
+		hoverOpacity: 0.08
+	},
+	shadows: {
+		0: 'none',
+		1: '0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12)',
+		2: '0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12)',
+		3: '0px 3px 3px -2px rgba(0,0,0,0.2),0px 3px 4px 0px rgba(0,0,0,0.14),0px 1px 8px 0px rgba(0,0,0,0.12)',
+		4: '0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12)',
+		5: '0px 3px 5px -1px rgba(0,0,0,0.2),0px 5px 8px 0px rgba(0,0,0,0.14),0px 1px 14px 0px rgba(0,0,0,0.12)',
+		6: '0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12)',
+		7: '0px 4px 5px -2px rgba(0,0,0,0.2),0px 7px 10px 1px rgba(0,0,0,0.14),0px 2px 16px 1px rgba(0,0,0,0.12)',
+		8: '0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12)'
 	}
 }
