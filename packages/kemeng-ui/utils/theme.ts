@@ -7,6 +7,14 @@ export type ThemeColorTypeSub = {
 	mainRgb: string
 }
 
+export type TypographyType = {
+	fontFamily: string
+	fontWeight: number
+	fontSize: string
+	lineHeight: number
+	letterSpacing: string
+}
+
 export type ThemeOptions = {
 	mode: 'dark' | 'light'
 	primary: ThemeColorTypeSub
@@ -51,6 +59,18 @@ export type ThemeOptions = {
 		disabledOpacity: number
 	}
 	shadows?: Record<number, string>
+
+	typographyH1?: TypographyType
+	typographyH2?: TypographyType
+	typographyH3?: TypographyType
+	typographyH4?: TypographyType
+	typographyH5?: TypographyType
+	typographyH6?: TypographyType
+	typographySubtitle1?: TypographyType
+	typographySubtitle2?: TypographyType
+	typographyBody1?: TypographyType
+	typographyBody2?: TypographyType
+	typographyInherit?: TypographyType
 }
 
 type ThemeVariables = {
@@ -66,50 +86,34 @@ export type BaseColorType = keyof Pick<
 	'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning'
 >
 
+const getThemeColorTypeSub = (name: string) => {
+	return {
+		main: `var(--${name}-main)`,
+		light: `var(--${name}-light)`,
+		dark: `var(--${name}-dark)`,
+		contrastText: `var(--${name}-contrastText)`,
+		mainRgb: `var(--${name}-mainRgb)`
+	}
+}
+
+const getTypographyType = (name: string) => {
+	return {
+		fontFamily: `var(--${name}-fontFamily)`,
+		fontWeight: `var(--${name}-fontWeight)`,
+		fontSize: `var(--${name}-fontSize)`,
+		lineHeight: `var(--${name}-lineHeight)`,
+		letterSpacing: `var(--${name}-letterSpacing)`
+	}
+}
+
 export const themeVariables: ThemeVariables = {
 	mode: 'var(--mode)',
-	primary: {
-		main: 'var(--primary-main)',
-		light: 'var(--primary-light)',
-		dark: 'var(--primary-dark)',
-		contrastText: 'var(--primary-contrastText)',
-		mainRgb: 'var(--primary-mainRgb)'
-	},
-	secondary: {
-		main: 'var(--secondary-main)',
-		light: 'var(--secondary-light)',
-		dark: 'var(--secondary-dark)',
-		contrastText: 'var(--secondary-contrastText)',
-		mainRgb: 'var(--secondary-mainRgb)'
-	},
-	error: {
-		main: 'var(--error-main)',
-		light: 'var(--error-light)',
-		dark: 'var(--error-dark)',
-		contrastText: 'var(--error-contrastText)',
-		mainRgb: 'var(--error-mainRgb)'
-	},
-	warning: {
-		main: 'var(--warning-main)',
-		light: 'var(--warning-light)',
-		dark: 'var(--warning-dark)',
-		contrastText: 'var(--warning-contrastText)',
-		mainRgb: 'var(--warning-mainRgb)'
-	},
-	info: {
-		main: 'var(--info-main)',
-		light: 'var(--info-light)',
-		dark: 'var(--info-dark)',
-		contrastText: 'var(--info-contrastText)',
-		mainRgb: 'var(--info-mainRgb)'
-	},
-	success: {
-		main: 'var(--success-main)',
-		light: 'var(--success-light)',
-		dark: 'var(--success-dark)',
-		contrastText: 'var(--success-contrastText)',
-		mainRgb: 'var(--success-mainRgb)'
-	},
+	primary: getThemeColorTypeSub('primary'),
+	secondary: getThemeColorTypeSub('secondary'),
+	error: getThemeColorTypeSub('error'),
+	warning: getThemeColorTypeSub('warning'),
+	info: getThemeColorTypeSub('info'),
+	success: getThemeColorTypeSub('success'),
 	background: {
 		default: 'var(--background-default)',
 		paper: 'var(--background-paper)'
@@ -155,5 +159,16 @@ export const themeVariables: ThemeVariables = {
 		6: 'var(--shadows-6)',
 		7: 'var(--shadows-7)',
 		8: 'var(--shadows-8)'
-	}
+	},
+	typographyH1: getTypographyType('typographyH1'),
+	typographyH2: getTypographyType('typographyH2'),
+	typographyH3: getTypographyType('typographyH3'),
+	typographyH4: getTypographyType('typographyH4'),
+	typographyH5: getTypographyType('typographyH5'),
+	typographyH6: getTypographyType('typographyH6'),
+	typographySubtitle1: getTypographyType('typographySubtitle1'),
+	typographySubtitle2: getTypographyType('typographySubtitle2'),
+	typographyBody1: getTypographyType('typographyBody1'),
+	typographyBody2: getTypographyType('typographyBody2'),
+	typographyInherit: getTypographyType('typographyInherit')
 }

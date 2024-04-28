@@ -10,3 +10,9 @@ export * from './components/Box'
 
 export { default as ThemePrivder } from './components/ThemePrivder'
 export * from './components/ThemePrivder'
+
+export { default as Typography } from './components/Typography'
+export * from './components/Typography'
+
+export { default as Link } from './components/Link'
+export * from './components/Link'

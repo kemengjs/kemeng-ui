@@ -5,24 +5,25 @@ import {
 	KeyboardEvent,
 	MouseEvent,
 	ReactNode,
+	Ref,
 	forwardRef,
 	useEffect,
 	useImperativeHandle,
 	useRef,
 	useState
 } from 'react'
-import { NativeProps, withNativeProps } from '../../utils/nativeProps'
+import { withNativeProps } from '../../utils/nativeProps'
 import { mergeProps } from '../../utils/withDefaultProps'
 import { cx, styled } from '@linaria/atomic'
 import { BaseColorType, themeVariables } from '../../utils'
 import TouchRipple, { TouchRippleProps } from './TouchRipple'
 import { getK } from '../../utils/style'
 import { useEventCallback } from '../../hooks/useEventCallback'
+import { useForkRef } from '../../hooks/useForkRef'
 
-export type ButtonRef = {
-	nativeElement: HTMLButtonElement | null
+export type ActionRef = Ref<{
 	focusVisible: () => void
-}
+}>
 
 type NativeButtonProps = DetailedHTMLProps<
 	ButtonHTMLAttributes<HTMLButtonElement>,
@@ -46,8 +47,8 @@ export type ButtonProps = {
 	fullWidth?: boolean
 	endIcon?: ReactNode
 	startIcon?: ReactNode
-} & NativeButtonProps &
-	NativeProps
+	actionRef?: ActionRef
+} & NativeButtonProps
 
 const defaultProps: ButtonProps = {
 	color: 'primary',
@@ -214,7 +215,7 @@ const ButtonEndIcon = styled.span`
 	${commonIconStyles}
 `
 
-const Button = forwardRef<ButtonRef, ButtonProps>((p, ref) => {
+const Button = forwardRef<HTMLButtonElement, ButtonProps>((p, ref) => {
 	const props = mergeProps(defaultProps, p)
 	const {
 		disableRipple,
@@ -240,9 +241,10 @@ const Button = forwardRef<ButtonRef, ButtonProps>((p, ref) => {
 		size,
 		startIcon,
 		endIcon,
+		actionRef,
 		...other
 	} = props
-	const nativeButtonRef = useRef<HTMLButtonElement>(null)
+	const buttonRef = useRef<HTMLButtonElement>(null)
 	const [mountedState, setMountedState] = useState(false)
 	const disabled = propDisabled
 	const enableTouchRipple = mountedState && !disableRipple && !disabled
@@ -254,14 +256,12 @@ const Button = forwardRef<ButtonRef, ButtonProps>((p, ref) => {
 		setFocusVisible(false)
 	}
 
-	useImperativeHandle(ref, () => ({
-		get nativeElement() {
-			return nativeButtonRef.current
-		},
+	const handleRef = useForkRef(ref, buttonRef)
 
+	useImperativeHandle(actionRef, () => ({
 		focusVisible: () => {
 			setFocusVisible(true)
-			nativeButtonRef.current.focus()
+			buttonRef.current.focus()
 		}
 	}))
 
@@ -402,7 +402,7 @@ const Button = forwardRef<ButtonRef, ButtonProps>((p, ref) => {
 	return withNativeProps(
 		props,
 		<ButtonRoot
-			ref={nativeButtonRef}
+			ref={handleRef}
 			type={props.type}
 			onBlur={handleBlur}
 			onClick={onClick}

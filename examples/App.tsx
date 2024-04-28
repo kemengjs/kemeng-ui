@@ -1,4 +1,4 @@
-import { Button, ThemePrivder } from '@kemengjs/kemeng-ui'
+import { Button, Link, ThemePrivder, Typography } from '@kemengjs/kemeng-ui'
 
 export default function App() {
 	return (
@@ -11,6 +11,8 @@ export default function App() {
 			>
 				难崩
 			</Button>
+			<Typography variant='body1'>123123</Typography>
+			<Link underline='hover'>test</Link>
 		</ThemePrivder>
 	)
 }
