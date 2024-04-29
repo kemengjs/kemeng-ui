@@ -72,14 +72,14 @@ export type TypographyProps = {
 	noWrap?: boolean
 	paragraph?: boolean
 	variant?: Variant
-	component?: ElementType
+	as?: ElementType
 	variantMapping?: VariantMapping
 } & NativeElementProps
 
 const Typography = forwardRef<HTMLElement, TypographyProps>((p, ref) => {
 	const {
 		align = 'inherit',
-		component,
+		as,
 		gutterBottom = false,
 		noWrap = false,
 		paragraph = false,
@@ -91,7 +91,7 @@ const Typography = forwardRef<HTMLElement, TypographyProps>((p, ref) => {
 	} = p
 
 	const Component: ElementType =
-		component ||
+		as ||
 		(paragraph
 			? 'p'
 			: variantMapping[variant] || defaultVariantMapping[variant]) ||

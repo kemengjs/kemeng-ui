@@ -5,7 +5,7 @@ import { getK } from '../../utils/style'
 import { themeVariables } from '../../utils'
 
 export type ContainerProps = {
-	component?: ElementType
+	as?: ElementType
 	disableGutters?: boolean
 	maxWidth?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | false | string
 	children?: ReactNode
@@ -37,7 +37,7 @@ const ContainerRoot = styled.div<ContainerProps>`
 
 const Container = forwardRef<HTMLDivElement, ContainerProps>((p, ref) => {
 	const {
-		component = 'div',
+		as = 'div',
 		disableGutters = false,
 		maxWidth = 'lg',
 		children,
@@ -49,8 +49,7 @@ const Container = forwardRef<HTMLDivElement, ContainerProps>((p, ref) => {
 		<ContainerRoot
 			maxWidth={maxWidth}
 			disableGutters={disableGutters}
-			component={component}
-			as={component}
+			as={as}
 			ref={ref as ForwardedRef<HTMLDivElement>}
 			className={cx(!disableGutters && k('gutters'))}
 			{...other}
