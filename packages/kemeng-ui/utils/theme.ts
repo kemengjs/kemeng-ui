@@ -71,6 +71,14 @@ export type ThemeOptions = {
 	typographyBody1?: TypographyType
 	typographyBody2?: TypographyType
 	typographyInherit?: TypographyType
+	spacing?: string
+	breakpoints?: {
+		xs: string
+		sm: string
+		md: string
+		lg: string
+		xl: string
+	}
 }
 
 type ThemeVariables = {
@@ -170,5 +178,13 @@ export const themeVariables: ThemeVariables = {
 	typographySubtitle2: getTypographyType('typographySubtitle2'),
 	typographyBody1: getTypographyType('typographyBody1'),
 	typographyBody2: getTypographyType('typographyBody2'),
-	typographyInherit: getTypographyType('typographyInherit')
+	typographyInherit: getTypographyType('typographyInherit'),
+	spacing: 'var(--spacing)',
+	breakpoints: {
+		xs: 'var(--breakpoints-xs)',
+		sm: 'var(--breakpoints-sm)',
+		md: 'var(--breakpoints-md)',
+		lg: 'var(--breakpoints-lg)',
+		xl: 'var(--breakpoints-xl)'
+	}
 }

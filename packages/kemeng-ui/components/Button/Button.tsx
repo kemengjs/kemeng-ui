@@ -242,6 +242,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>((p, ref) => {
 		startIcon,
 		endIcon,
 		actionRef,
+		fullWidth,
 		...other
 	} = props
 	const buttonRef = useRef<HTMLButtonElement>(null)
@@ -427,7 +428,8 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>((p, ref) => {
 					: variant === 'text'
 						? k('text')
 						: k('outlined'),
-				size === 'medium' ? '' : size === 'large' ? k('large') : k('small')
+				size === 'medium' ? '' : size === 'large' ? k('large') : k('small'),
+				fullWidth && k('fullWidth')
 			)}
 		>
 			{startIcon && <ButtonStartIcon>{startIcon}</ButtonStartIcon>}

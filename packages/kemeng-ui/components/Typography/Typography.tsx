@@ -1,6 +1,6 @@
 import { cx, styled } from '@linaria/atomic'
-import { AnchorHTMLAttributes, ElementType, ReactNode, forwardRef } from 'react'
-import { withNativeProps } from '../../utils/nativeProps'
+import { ElementType, ReactNode, forwardRef } from 'react'
+import { NativeElementProps, withNativeProps } from '../../utils/nativeProps'
 import { TypographyType, themeVariables } from '../../utils'
 import { capitalizeFirstLetter } from '../../utils/str'
 import { getK } from '../../utils/style'
@@ -33,8 +33,6 @@ export type VariantMapping = {
 	inherit: ElementType
 }
 export type Variant = keyof VariantMapping
-
-type NativeProps = Omit<AnchorHTMLAttributes<Element>, 'ref'>
 
 const k = getK('typography')
 
@@ -76,7 +74,7 @@ export type TypographyProps = {
 	variant?: Variant
 	component?: ElementType
 	variantMapping?: VariantMapping
-} & NativeProps
+} & NativeElementProps
 
 const Typography = forwardRef<HTMLElement, TypographyProps>((p, ref) => {
 	const {

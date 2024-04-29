@@ -38,6 +38,7 @@ const LinkRoot = styled(Typography)<LinkProps>`
 	&.${k('always')} {
 		text-decoration: underline;
 		&:hover {
+			color: ${themeVariables.primary.dark};
 			text-decoration-color: ${themeVariables.primary.dark};
 		}
 	}

@@ -1,6 +1,6 @@
 import { cx } from '@linaria/atomic'
 import React from 'react'
-import type { CSSProperties, ReactElement } from 'react'
+import type { AnchorHTMLAttributes, CSSProperties, ReactElement } from 'react'
 
 export type NativeProps<S extends string = never> = {
 	className?: string
@@ -26,3 +26,5 @@ export function withNativeProps<P extends NativeProps>(
 
 	return React.cloneElement(element, p)
 }
+
+export type NativeElementProps = Omit<AnchorHTMLAttributes<Element>, 'ref'>

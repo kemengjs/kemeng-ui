@@ -159,5 +159,13 @@ export const light: ThemeOptions = {
 		fontSize: '0.875rem',
 		lineHeight: 1.43,
 		letterSpacing: '0.01071em'
+	},
+	spacing: '8px',
+	breakpoints: {
+		xs: '444px',
+		sm: '600px',
+		md: '900px',
+		lg: '1200px',
+		xl: '1536px'
 	}
 }

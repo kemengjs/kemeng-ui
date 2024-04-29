@@ -16,3 +16,6 @@ export * from './components/Typography'
 
 export { default as Link } from './components/Link'
 export * from './components/Link'
+
+export { default as Container } from './components/Container'
+export * from './components/Container'
