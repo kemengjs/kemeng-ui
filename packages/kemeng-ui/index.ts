@@ -19,3 +19,15 @@ export * from './components/Link'
 
 export { default as Container } from './components/Container'
 export * from './components/Container'
+
+export { default as AppBar } from './components/AppBar'
+export * from './components/AppBar'
+
+export { default as Paper } from './components/Paper'
+export * from './components/Paper'
+
+export { default as MenuItem } from './components/MenuItem'
+export * from './components/MenuItem'
+
+export { default as MenuList } from './components/MenuList'
+export * from './components/MenuList'

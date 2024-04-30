@@ -1,29 +1,16 @@
 import {
 	ButtonHTMLAttributes,
 	DetailedHTMLProps,
-	FocusEvent,
-	KeyboardEvent,
-	MouseEvent,
 	ReactNode,
-	Ref,
-	forwardRef,
-	useEffect,
-	useImperativeHandle,
-	useRef,
-	useState
+	forwardRef
 } from 'react'
-import { withNativeProps } from '../../utils/nativeProps'
+import { withNativeElementProps } from '../../utils/nativeProps'
 import { mergeProps } from '../../utils/withDefaultProps'
 import { cx, styled } from '@linaria/atomic'
 import { BaseColorType, themeVariables } from '../../utils'
-import TouchRipple, { TouchRippleProps } from './TouchRipple'
+import { TouchRippleProps } from './TouchRipple'
 import { getK } from '../../utils/style'
-import { useEventCallback } from '../../hooks/useEventCallback'
-import { useForkRef } from '../../hooks/useForkRef'
-
-export type ActionRef = Ref<{
-	focusVisible: () => void
-}>
+import ButtonBase from './ButtonBase'
 
 type NativeButtonProps = DetailedHTMLProps<
 	ButtonHTMLAttributes<HTMLButtonElement>,
@@ -39,7 +26,7 @@ export type ButtonProps = {
 	disabled?: boolean
 	disableRipple?: boolean
 	disableTouchRipple?: boolean
-	focusRipple?: boolean
+	disableFocusRipple?: boolean
 	type?: 'submit' | 'reset' | 'button'
 	children?: ReactNode
 	touchRippleProps?: TouchRippleProps
@@ -47,18 +34,17 @@ export type ButtonProps = {
 	fullWidth?: boolean
 	endIcon?: ReactNode
 	startIcon?: ReactNode
-	actionRef?: ActionRef
+	focusVisibleClassName?: string
 } & NativeButtonProps
 
 const defaultProps: ButtonProps = {
+	disableFocusRipple: false,
 	color: 'primary',
 	variant: 'contained',
 	type: 'button',
 	size: 'medium',
 	disabled: false,
-	disableRipple: false,
 	disableTouchRipple: false,
-	focusRipple: true,
 	centerRipple: false
 }
 
@@ -75,35 +61,11 @@ const getSizeStyles = (small: string, large: string) => {
 	}
 }
 
-const ButtonRoot = styled.button<ButtonProps>`
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	position: relative;
-	box-sizing: border-box;
-	-webkit-tap-highlight-color: transparent;
-	outline: 0px;
-	border: 0px;
-	cursor: pointer;
-	user-select: none;
-	vertical-align: middle;
-	appearance: none;
-	text-decoration: none;
-	&::-moz-focus-inner {
-		border-style: none;
-	}
-	&.${k('disabled')} {
-		pointer-events: none;
-		cursor: default;
-	}
-	@media print {
-		print-color-adjust: exact;
-	}
-	font-weight: 500;
-	font-size: 0.875rem;
-	line-height: 1.75;
-	letter-spacing: 0.02857em;
-	text-transform: uppercase;
+const ButtonRoot = styled(ButtonBase)<ButtonProps>`
+	font-weight: ${themeVariables.typographyButton.fontWeight};
+	font-size: ${themeVariables.typographyButton.fontSize};
+	line-height: ${themeVariables.typographyButton.lineHeight};
+	letter-spacing: ${themeVariables.typographyButton.letterSpacing};
 	min-width: 64px;
 	padding: 6px 16px;
 	border-radius: ${themeVariables.shape.borderRadius};
@@ -218,209 +180,27 @@ const ButtonEndIcon = styled.span`
 const Button = forwardRef<HTMLButtonElement, ButtonProps>((p, ref) => {
 	const props = mergeProps(defaultProps, p)
 	const {
-		disableRipple,
-		disabled: propDisabled,
-		onMouseDown,
-		onContextMenu,
-		onDragLeave,
-		onMouseUp,
-		onMouseLeave,
-		onTouchStart,
-		onTouchEnd,
-		onBlur,
-		onTouchMove,
-		onClick,
+		disabled,
+		disableFocusRipple,
 		color,
-		onKeyDown,
-		disableTouchRipple,
-		focusRipple,
-		onKeyUp,
-		touchRippleProps,
-		centerRipple,
+		focusVisibleClassName,
 		variant,
 		size,
 		startIcon,
 		endIcon,
-		actionRef,
-		fullWidth,
-		...other
+		children,
+		fullWidth
 	} = props
-	const buttonRef = useRef<HTMLButtonElement>(null)
-	const [mountedState, setMountedState] = useState(false)
-	const disabled = propDisabled
-	const enableTouchRipple = mountedState && !disableRipple && !disabled
 
-	const rippleRef = useRef(null)
-
-	const [focusVisible, setFocusVisible] = useState(false)
-	if (disabled && focusVisible) {
-		setFocusVisible(false)
-	}
-
-	const handleRef = useForkRef(ref, buttonRef)
-
-	useImperativeHandle(actionRef, () => ({
-		focusVisible: () => {
-			setFocusVisible(true)
-			buttonRef.current.focus()
-		}
-	}))
-
-	useEffect(() => {
-		setMountedState(true)
-	}, [])
-
-	function useRippleHandler(
-		rippleAction: 'start' | 'stop',
-		eventCallback: any,
-		skipRippleAction = disableTouchRipple
-	) {
-		return useEventCallback(event => {
-			if (eventCallback) {
-				eventCallback(event)
-			}
-
-			const ignore = skipRippleAction
-			if (!ignore && rippleRef.current) {
-				rippleRef.current[rippleAction](event)
-			}
-
-			return true
-		})
-	}
-
-	const handleMouseDown = useRippleHandler('start', onMouseDown)
-	const handleContextMenu = useRippleHandler('stop', onContextMenu)
-	const handleDragLeave = useRippleHandler('stop', onDragLeave)
-	const handleMouseUp = useRippleHandler('stop', onMouseUp)
-	const handleMouseLeave = useRippleHandler(
-		'stop',
-		(event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
-			if (focusVisible) {
-				event.preventDefault()
-			}
-			if (onMouseLeave) {
-				onMouseLeave(event)
-			}
-		}
-	)
-	const handleTouchStart = useRippleHandler('start', onTouchStart)
-	const handleTouchEnd = useRippleHandler('stop', onTouchEnd)
-	const handleTouchMove = useRippleHandler('stop', onTouchMove)
-
-	const handleBlur = useRippleHandler(
-		'stop',
-		(event: FocusEvent<HTMLButtonElement, Element>) => {
-			setFocusVisible(false)
-			if (onBlur) {
-				onBlur(event)
-			}
-		},
-		false
-	)
-
-	const keydownRef = useRef(false)
-	const handleKeyDown = useEventCallback(
-		(event: KeyboardEvent<HTMLButtonElement>) => {
-			// Check if key is already down to avoid repeats being counted as multiple activations
-			if (
-				focusRipple &&
-				!keydownRef.current &&
-				focusVisible &&
-				rippleRef.current &&
-				event.key === ' '
-			) {
-				keydownRef.current = true
-				rippleRef.current.stop(event, () => {
-					rippleRef.current.start(event)
-				})
-			}
-
-			if (event.target === event.currentTarget && event.key === ' ') {
-				event.preventDefault()
-			}
-
-			if (onKeyDown) {
-				onKeyDown(event)
-			}
-
-			// Keyboard accessibility for non interactive elements
-			if (
-				event.target === event.currentTarget &&
-				event.key === 'Enter' &&
-				!disabled
-			) {
-				event.preventDefault()
-				if (onClick) {
-					onClick(
-						event as unknown as MouseEvent<
-							HTMLButtonElement,
-							globalThis.MouseEvent
-						>
-					)
-				}
-			}
-		}
-	)
-
-	const handleKeyUp = useEventCallback(
-		(event: KeyboardEvent<HTMLButtonElement>) => {
-			// calling preventDefault in keyUp on a <button> will not dispatch a click event if Space is pressed
-			// https://codesandbox.io/p/sandbox/button-keyup-preventdefault-dn7f0
-			if (
-				focusRipple &&
-				event.key === ' ' &&
-				rippleRef.current &&
-				focusVisible &&
-				!event.defaultPrevented
-			) {
-				keydownRef.current = false
-				rippleRef.current.stop(event, () => {
-					rippleRef.current.pulsate(event)
-				})
-			}
-			if (onKeyUp) {
-				onKeyUp(event)
-			}
-
-			// Keyboard accessibility for non interactive elements
-			if (
-				onClick &&
-				event.target === event.currentTarget &&
-				event.key === ' ' &&
-				!event.defaultPrevented
-			) {
-				onClick(
-					event as unknown as MouseEvent<
-						HTMLButtonElement,
-						globalThis.MouseEvent
-					>
-				)
-			}
-		}
-	)
-
-	return withNativeProps(
+	return withNativeElementProps(
 		props,
 		<ButtonRoot
-			ref={handleRef}
+			ref={ref}
 			type={props.type}
-			onBlur={handleBlur}
-			onClick={onClick}
-			onContextMenu={handleContextMenu}
-			onKeyDown={handleKeyDown}
-			onKeyUp={handleKeyUp}
-			onMouseDown={handleMouseDown}
-			onMouseLeave={handleMouseLeave}
-			onMouseUp={handleMouseUp}
-			onDragLeave={handleDragLeave}
-			onTouchEnd={handleTouchEnd}
-			onTouchMove={handleTouchMove}
-			onTouchStart={handleTouchStart}
 			disabled={disabled}
+			focusRipple={!disableFocusRipple}
+			focusVisibleClassName={cx(k('focusVisible'), focusVisibleClassName)}
 			color={color}
-			tabIndex={disabled ? -1 : props.tabIndex}
-			{...other}
 			className={cx(
 				disabled && k('disabled'),
 				variant === 'contained'
@@ -433,16 +213,8 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>((p, ref) => {
 			)}
 		>
 			{startIcon && <ButtonStartIcon>{startIcon}</ButtonStartIcon>}
-			{props.children}
+			{children}
 			{endIcon && <ButtonEndIcon>{endIcon}</ButtonEndIcon>}
-			{enableTouchRipple ? (
-				/* TouchRipple is only needed client-side, x2 boost on the server. */
-				<TouchRipple
-					ref={rippleRef}
-					center={centerRipple}
-					{...touchRippleProps}
-				/>
-			) : null}
 		</ButtonRoot>
 	)
 })

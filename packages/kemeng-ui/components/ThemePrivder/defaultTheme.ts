@@ -76,7 +76,11 @@ export const light: ThemeOptions = {
 		disabled: 'rgba(0,0,0,0.26)',
 		disabledBackground: 'rgba(0,0,0,0.12)',
 		disabledOpacity: 0.38,
-		hoverOpacity: 0.08
+		hoverOpacity: 0.04,
+		selected: 'rgba(0, 0, 0, 0.08)',
+		selectedOpacity: 0.08,
+		focus: 'rgba(0, 0, 0, 0.12)',
+		focusOpacity: 0.12
 	},
 	shadows: {
 		0: 'none',
@@ -87,7 +91,9 @@ export const light: ThemeOptions = {
 		5: '0px 3px 5px -1px rgba(0,0,0,0.2),0px 5px 8px 0px rgba(0,0,0,0.14),0px 1px 14px 0px rgba(0,0,0,0.12)',
 		6: '0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12)',
 		7: '0px 4px 5px -2px rgba(0,0,0,0.2),0px 7px 10px 1px rgba(0,0,0,0.14),0px 2px 16px 1px rgba(0,0,0,0.12)',
-		8: '0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12)'
+		8: '0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12)',
+		16: '0px 8px 10px -5px rgba(0,0,0,0.2),0px 16px 24px 2px rgba(0,0,0,0.14),0px 6px 30px 5px rgba(0,0,0,0.12)',
+		24: '0px 11px 15px -7px rgba(0,0,0,0.2),0px 24px 38px 3px rgba(0,0,0,0.14),0px 9px 46px 8px rgba(0,0,0,0.12)'
 	},
 
 	typographyH1: {
@@ -160,6 +166,13 @@ export const light: ThemeOptions = {
 		lineHeight: 1.43,
 		letterSpacing: '0.01071em'
 	},
+	typographyButton: {
+		fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+		fontWeight: 500,
+		fontSize: '0.875rem',
+		lineHeight: 1.75,
+		letterSpacing: '0.02857em'
+	},
 	spacing: '8px',
 	breakpoints: {
 		xs: '444px',
@@ -167,5 +180,10 @@ export const light: ThemeOptions = {
 		md: '900px',
 		lg: '1200px',
 		xl: '1536px'
+	},
+	zIndex: {
+		appBar: 1100,
+		drawer: 1200,
+		modal: 1300
 	}
 }

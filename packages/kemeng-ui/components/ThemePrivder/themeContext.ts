@@ -4,7 +4,7 @@ import { ThemeOptions } from '../../utils'
 export const ThemeContext = createContext<ThemeOptions>(null)
 
 export const useTheme = () => {
-	const theme = useContext(ThemeContext)
+	const theme = useContext(ThemeContext) || ({} as ThemeOptions)
 
 	return {
 		theme

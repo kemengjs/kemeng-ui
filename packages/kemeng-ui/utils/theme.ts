@@ -15,8 +15,10 @@ export type TypographyType = {
 	letterSpacing: string
 }
 
+export type ThemeMode = 'dark' | 'light'
+
 export type ThemeOptions = {
-	mode: 'dark' | 'light'
+	mode: ThemeMode
 	primary: ThemeColorTypeSub
 	secondary?: Partial<ThemeColorTypeSub>
 	error?: Partial<ThemeColorTypeSub>
@@ -57,6 +59,10 @@ export type ThemeOptions = {
 		disabled: string
 		disabledBackground: string
 		disabledOpacity: number
+		selected: string
+		selectedOpacity: number
+		focus: string
+		focusOpacity: number
 	}
 	shadows?: Record<number, string>
 
@@ -71,6 +77,7 @@ export type ThemeOptions = {
 	typographyBody1?: TypographyType
 	typographyBody2?: TypographyType
 	typographyInherit?: TypographyType
+	typographyButton?: TypographyType
 	spacing?: string
 	breakpoints?: {
 		xs: string
@@ -78,6 +85,11 @@ export type ThemeOptions = {
 		md: string
 		lg: string
 		xl: string
+	}
+	zIndex?: {
+		appBar: number
+		drawer: number
+		modal: number
 	}
 }
 
@@ -155,7 +167,11 @@ export const themeVariables: ThemeVariables = {
 		disabled: 'var(--action-disabled)',
 		disabledBackground: 'var(--action-disabledBackground)',
 		disabledOpacity: 'var(--action-disabledOpacity)',
-		hoverOpacity: 'var(--action-hoverOpacity)'
+		hoverOpacity: 'var(--action-hoverOpacity)',
+		selected: 'var(--action-selected)',
+		selectedOpacity: 'var(--action-selectedOpacity)',
+		focus: 'var(--action-focus)',
+		focusOpacity: 'var(--action-focusOpacity)'
 	},
 	shadows: {
 		0: 'var(--shadows-0)',
@@ -166,7 +182,9 @@ export const themeVariables: ThemeVariables = {
 		5: 'var(--shadows-5)',
 		6: 'var(--shadows-6)',
 		7: 'var(--shadows-7)',
-		8: 'var(--shadows-8)'
+		8: 'var(--shadows-8)',
+		16: 'var(--shadows-16)',
+		24: 'var(--shadows-24)'
 	},
 	typographyH1: getTypographyType('typographyH1'),
 	typographyH2: getTypographyType('typographyH2'),
@@ -179,6 +197,7 @@ export const themeVariables: ThemeVariables = {
 	typographyBody1: getTypographyType('typographyBody1'),
 	typographyBody2: getTypographyType('typographyBody2'),
 	typographyInherit: getTypographyType('typographyInherit'),
+	typographyButton: getTypographyType('typographyButton'),
 	spacing: 'var(--spacing)',
 	breakpoints: {
 		xs: 'var(--breakpoints-xs)',
@@ -186,5 +205,10 @@ export const themeVariables: ThemeVariables = {
 		md: 'var(--breakpoints-md)',
 		lg: 'var(--breakpoints-lg)',
 		xl: 'var(--breakpoints-xl)'
+	},
+	zIndex: {
+		appBar: 'var(--zIndex-appBar)',
+		drawer: 'var(--zIndex-drawer)',
+		modal: 'var(--zIndex-modal)'
 	}
 }

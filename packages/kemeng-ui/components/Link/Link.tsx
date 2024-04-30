@@ -8,14 +8,15 @@ import Typography, { TypographyProps } from '../Typography'
 import { cx, styled } from '@linaria/atomic'
 import { getK } from '../../utils/style'
 import { themeVariables } from '../../utils'
+import { withNativeElementProps } from '../../utils/nativeProps'
 
 export type LinkProps = {
 	variant?: TypographyProps['variant']
 	underline?: 'none' | 'hover' | 'always'
 	children?: ReactNode
-} & NativeButtonProps
+} & NativeAnchorProps
 
-type NativeButtonProps = DetailedHTMLProps<
+type NativeAnchorProps = DetailedHTMLProps<
 	AnchorHTMLAttributes<HTMLAnchorElement>,
 	HTMLAnchorElement
 >
@@ -45,9 +46,10 @@ const LinkRoot = styled(Typography)<LinkProps>`
 `
 
 const Link = forwardRef<HTMLAnchorElement, LinkProps>((p, ref) => {
-	const { children, underline = 'always', variant = 'body1', ...other } = p
+	const { children, underline = 'always', variant = 'body1' } = p
 
-	return (
+	return withNativeElementProps(
+		p,
 		<LinkRoot
 			as='a'
 			variant={variant}
@@ -60,7 +62,6 @@ const Link = forwardRef<HTMLAnchorElement, LinkProps>((p, ref) => {
 						? k('hover')
 						: k('none')
 			)}
-			{...other}
 		>
 			{children}
 		</LinkRoot>

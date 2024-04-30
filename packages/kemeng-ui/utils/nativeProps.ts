@@ -19,7 +19,7 @@ export function withNativeProps<P extends NativeProps>(
 	}
 	if (props.style) {
 		p.style = {
-			...p.style,
+			...element.props.style,
 			...props.style
 		}
 	}
@@ -28,3 +28,27 @@ export function withNativeProps<P extends NativeProps>(
 }
 
 export type NativeElementProps = Omit<AnchorHTMLAttributes<Element>, 'ref'>
+
+export function withNativeElementProps<P extends NativeElementProps>(
+	props: P,
+	element: ReactElement
+) {
+	const p = {
+		...props,
+		...element.props
+	}
+	if (props.className) {
+		p.className = cx(element.props.className, props.className)
+	}
+	if (props.style) {
+		p.style = {
+			...element.props.style,
+			...props.style
+		}
+	}
+
+	return React.cloneElement(element, p)
+}
+
+export type NativeJSXElementsWithoutRef<T extends keyof JSX.IntrinsicElements> =
+	Omit<JSX.IntrinsicElements[T], 'ref'>

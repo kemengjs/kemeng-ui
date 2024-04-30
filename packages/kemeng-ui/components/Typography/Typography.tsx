@@ -1,6 +1,9 @@
 import { cx, styled } from '@linaria/atomic'
 import { ElementType, ReactNode, forwardRef } from 'react'
-import { NativeElementProps, withNativeProps } from '../../utils/nativeProps'
+import {
+	NativeElementProps,
+	withNativeElementProps
+} from '../../utils/nativeProps'
 import { TypographyType, themeVariables } from '../../utils'
 import { capitalizeFirstLetter } from '../../utils/str'
 import { getK } from '../../utils/style'
@@ -85,9 +88,7 @@ const Typography = forwardRef<HTMLElement, TypographyProps>((p, ref) => {
 		paragraph = false,
 		variant = 'body1',
 		variantMapping = defaultVariantMapping,
-		children,
-		onClick,
-		...other
+		children
 	} = p
 
 	const Component: ElementType =
@@ -97,7 +98,7 @@ const Typography = forwardRef<HTMLElement, TypographyProps>((p, ref) => {
 			: variantMapping[variant] || defaultVariantMapping[variant]) ||
 		'span'
 
-	return withNativeProps(
+	return withNativeElementProps(
 		p,
 		<TypographyRoot
 			ref={ref}
@@ -111,7 +112,6 @@ const Typography = forwardRef<HTMLElement, TypographyProps>((p, ref) => {
 				gutterBottom && k('gutterBottom')
 			)}
 			as={Component}
-			{...other}
 		>
 			{children}
 		</TypographyRoot>

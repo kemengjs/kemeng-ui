@@ -1,7 +1,10 @@
 import { cx, styled } from '@linaria/atomic'
 import { ElementType, ReactNode, forwardRef, ForwardedRef } from 'react'
-import { NativeElementProps, withNativeProps } from '../../utils/nativeProps'
-import { getK } from '../../utils/style'
+import {
+	NativeElementProps,
+	withNativeElementProps
+} from '../../utils/nativeProps'
+import { getK, unit } from '../../utils/style'
 import { themeVariables } from '../../utils'
 
 export type ContainerProps = {
@@ -25,26 +28,20 @@ const ContainerRoot = styled.div<ContainerProps>`
 	}};
 
 	&.${k('gutters')} {
-		padding-left: calc(${themeVariables.spacing} * 2);
-		padding-right: calc(${themeVariables.spacing} * 2);
+		padding-left: ${unit(2)};
+		padding-right: ${unit(2)};
 
 		@media (min-width: 600px) {
-			padding-left: calc(${themeVariables.spacing} * 3);
-			padding-right: calc(${themeVariables.spacing} * 3);
+			padding-left: ${unit(3)};
+			padding-right: ${unit(3)};
 		}
 	}
 `
 
 const Container = forwardRef<HTMLDivElement, ContainerProps>((p, ref) => {
-	const {
-		as = 'div',
-		disableGutters = false,
-		maxWidth = 'lg',
-		children,
-		...other
-	} = p
+	const { as = 'div', disableGutters = false, maxWidth = 'lg', children } = p
 
-	return withNativeProps(
+	return withNativeElementProps(
 		p,
 		<ContainerRoot
 			maxWidth={maxWidth}
@@ -52,7 +49,6 @@ const Container = forwardRef<HTMLDivElement, ContainerProps>((p, ref) => {
 			as={as}
 			ref={ref as ForwardedRef<HTMLDivElement>}
 			className={cx(!disableGutters && k('gutters'))}
-			{...other}
 		>
 			{children}
 		</ContainerRoot>
