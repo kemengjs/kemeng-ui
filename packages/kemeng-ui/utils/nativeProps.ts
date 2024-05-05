@@ -52,3 +52,33 @@ export function withNativeElementProps<P extends NativeElementProps>(
 
 export type NativeJSXElementsWithoutRef<T extends keyof JSX.IntrinsicElements> =
 	Omit<JSX.IntrinsicElements[T], 'ref'>
+
+export function withNativeContextProps<P extends NativeElementProps>(
+	props: P,
+	element: ReactElement
+) {
+	const elementProps = element.props.children.props
+	const p = {
+		...props,
+		...elementProps
+	}
+	if (props.className) {
+		p.className = cx(elementProps.className, props.className)
+	}
+	if (props.style) {
+		p.style = {
+			...elementProps.style,
+			...props.style
+		}
+	}
+
+	const contextProps = {
+		...element.props,
+		children: {
+			...element.props.children,
+			props: p
+		}
+	}
+
+	return React.cloneElement(element, contextProps)
+}

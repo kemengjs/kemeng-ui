@@ -18,7 +18,7 @@ import { getK } from '../../utils/style'
 const DURATION = 550
 export const DELAY_RIPPLE = 80
 
-const k = getK('touchRipple')
+const k = getK('TouchRipple')
 
 const TouchRippleRoot = styled.span`
 	overflow: hidden;

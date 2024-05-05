@@ -32,7 +32,7 @@ type NativeButtonProps = DetailedHTMLProps<
 	HTMLButtonElement
 >
 
-const k = getK('buttonRoot')
+const k = getK('ButtonBase')
 
 export type ButtonBaseProps = {
 	disabled?: boolean

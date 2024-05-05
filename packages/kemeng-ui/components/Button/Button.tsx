@@ -17,7 +17,7 @@ type NativeButtonProps = DetailedHTMLProps<
 	HTMLButtonElement
 >
 
-const k = getK('button')
+const k = getK('Button')
 
 export type ButtonProps = {
 	color?: BaseColorType

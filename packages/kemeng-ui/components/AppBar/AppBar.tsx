@@ -5,7 +5,7 @@ import Paper, { PaperProps } from '../Paper'
 import { getK } from '../../utils/style'
 import { withNativeElementProps } from '../../utils/nativeProps'
 
-const k = getK('appBar')
+const k = getK('AppBar')
 
 const AppBarRoot = styled(Paper)<AppBarProps>`
 	display: flex;

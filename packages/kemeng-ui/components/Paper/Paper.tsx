@@ -8,10 +8,10 @@ import { useTheme } from '../ThemePrivder'
 export type PaperProps = {
 	variant?: 'elevation' | 'outlined'
 	square?: boolean
-	elevation?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 16 | 24
+	elevation?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 16 | 24
 } & JSX.IntrinsicElements['div']
 
-const k = getK('paper')
+const k = getK('Paper')
 
 type PaperRootProps = PaperProps & {
 	mode: ThemeMode

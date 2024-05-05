@@ -36,6 +36,7 @@ export type ThemeOptions = {
 		icon?: string
 	}
 	divider?: string
+	dividerLight?: string
 	shape?: {
 		borderRadius: string
 	}
@@ -91,6 +92,7 @@ export type ThemeOptions = {
 		drawer: number
 		modal: number
 	}
+	rtl?: string
 }
 
 type ThemeVariables = {
@@ -145,6 +147,7 @@ export const themeVariables: ThemeVariables = {
 		icon: 'var(--text-icon)'
 	},
 	divider: 'var(--divider)',
+	dividerLight: 'var(--dividerLight)',
 	shape: {
 		borderRadius: 'var(--shape-borderRadius)'
 	},

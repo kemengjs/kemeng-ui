@@ -128,23 +128,25 @@ export const bundleWatch = () => {
 		}
 	})
 
-	// const watcherDts = watch({
-	// 	...inputOption,
-	// 	plugins: [
-	// 		...inputOption.plugins,
-	// 		dts({
-	// 			tsconfig: resolve('../../tsconfig.json')
-	// 		})
-	// 	],
-	// 	output: outputMap.dts
-	// })
+	const watcherDts = watch({
+		...inputOption,
+		plugins: [
+			...inputOption.plugins,
+			dts({
+				tsconfig: resolve('../../tsconfig.json')
+			})
+		],
+		output: outputMap.dts
+	})
 
-	// watcherDts.on('event', (event: RollupWatcherEvent) => {
-	// 	const { result } = event as { result: RollupBuild }
-	// 	if (result) {
-	// 		result.close()
-	// 	}
-	// })
+	watcherDts.on('event', (event: RollupWatcherEvent) => {
+		const { result } = event as { result: RollupBuild }
+
+		if (result) {
+			result.close()
+			log('watching dts complete~')
+		}
+	})
 }
 
 export const runRollupBuildDts = async () => {

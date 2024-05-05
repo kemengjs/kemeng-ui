@@ -133,7 +133,7 @@ export default function kemengUIPlugin({
 
 			const classNameFnForKemeng: ClassNameFn = (hash, title, args) => {
 				if (args.file.includes(keyword)) {
-					const firstChar = title.charAt(0).toLowerCase()
+					const firstChar = title.charAt(0).toUpperCase()
 					const restOfTitle = title.slice(1)
 					const targetTitle = firstChar + restOfTitle
 

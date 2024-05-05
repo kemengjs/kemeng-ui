@@ -21,7 +21,7 @@ type NativeAnchorProps = DetailedHTMLProps<
 	HTMLAnchorElement
 >
 
-const k = getK('link')
+const k = getK('Link')
 
 const LinkRoot = styled(Typography)<LinkProps>`
 	color: ${themeVariables.primary.main};

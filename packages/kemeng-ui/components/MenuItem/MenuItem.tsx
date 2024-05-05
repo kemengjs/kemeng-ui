@@ -20,7 +20,7 @@ export type MenuItemProps = {
 	selected?: boolean
 } & NativeJSXElementsWithoutRef<'li'>
 
-const k = getK('menuItem')
+const k = getK('MenuItem')
 
 const MenuItemRoot = styled(ButtonBase)<MenuItemProps>`
 	font-weight: ${themeVariables.typographyBody1.fontWeight};
@@ -61,7 +61,7 @@ const MenuItemRoot = styled(ButtonBase)<MenuItemProps>`
 			${themeVariables.action.selectedOpacity}
 		);
 
-		&.${k('focusVisible')} {
+		&:focus-visible {
 			background-color: rgba(
 				${themeVariables.primary.mainRgb},
 				calc(
@@ -89,7 +89,7 @@ const MenuItemRoot = styled(ButtonBase)<MenuItemProps>`
 		}
 	}
 
-	&.${k('focusVisible')} {
+	&:focus-visible {
 		background-color: ${themeVariables.action.focus};
 	}
 
@@ -114,7 +114,6 @@ const MenuItem = forwardRef<HTMLLIElement, MenuItemProps>((p, ref) => {
 		dense = false,
 		divider = false,
 		disableGutters = false,
-		focusVisibleClassName,
 		disabled = false,
 		selected = false,
 		tabIndex: tabIndexProp
@@ -147,13 +146,13 @@ const MenuItem = forwardRef<HTMLLIElement, MenuItemProps>((p, ref) => {
 			tabIndex={tabIndex}
 			component='li'
 			autoFocus={autoFocus}
-			focusVisibleClassName={cx(k('focusVisible'), focusVisibleClassName)}
+			aria-disabled={disabled}
 			className={cx(
 				selected && k('selected'),
 				dense && k('dense'),
 				disabled && k('disabled'),
 				divider && k('divider'),
-				disableGutters && k('disableGutters')
+				!disableGutters && k('gutters')
 			)}
 		></MenuItemRoot>
 	)

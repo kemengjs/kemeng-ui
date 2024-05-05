@@ -14,7 +14,7 @@ export type ContainerProps = {
 	children?: ReactNode
 } & NativeElementProps
 
-const k = getK('container')
+const k = getK('Container')
 
 const ContainerRoot = styled.div<ContainerProps>`
 	width: 100%;

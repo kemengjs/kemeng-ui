@@ -31,3 +31,30 @@ export * from './components/MenuItem'
 
 export { default as MenuList } from './components/MenuList'
 export * from './components/MenuList'
+
+export { default as Menu } from './components/Menu'
+export * from './components/Menu'
+
+export { default as List } from './components/List'
+export * from './components/List'
+
+export { default as Backdrop } from './components/Backdrop'
+export * from './components/Backdrop'
+
+export { default as Modal } from './components/Modal'
+export * from './components/Modal'
+
+export { default as Fade } from './components/Fade'
+export * from './components/Fade'
+
+export { default as Popover } from './components/Popover'
+export * from './components/Popover'
+
+export { default as Grow } from './components/Grow'
+export * from './components/Grow'
+
+export { default as Drawer } from './components/Drawer'
+export * from './components/Drawer'
+
+export { default as Divider } from './components/Divider'
+export * from './components/Divider'

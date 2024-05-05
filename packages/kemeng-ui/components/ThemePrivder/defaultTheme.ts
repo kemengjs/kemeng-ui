@@ -54,6 +54,7 @@ export const light: ThemeOptions = {
 		disabled: 'rgba(0,0,0,0.38)'
 	},
 	divider: 'rgba(0,0,0,0.12)',
+	dividerLight: 'rgba(0,0,0,0.08)',
 	shape: {
 		borderRadius: '4px'
 	},
@@ -185,5 +186,6 @@ export const light: ThemeOptions = {
 		appBar: 1100,
 		drawer: 1200,
 		modal: 1300
-	}
+	},
+	rtl: 'ltr'
 }

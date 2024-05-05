@@ -37,7 +37,7 @@ export type VariantMapping = {
 }
 export type Variant = keyof VariantMapping
 
-const k = getK('typography')
+const k = getK('Typography')
 
 const getTypographyObj = (variant: Variant) => {
 	return themeVariables[
