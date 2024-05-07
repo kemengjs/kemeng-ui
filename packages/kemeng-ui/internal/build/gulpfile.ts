@@ -19,7 +19,7 @@ const clean: TaskFunction = cb => {
 	cb()
 }
 
-const build = series(clean, parallel(runRollupBuildBundle, runRollupBuildDts))
+const build = series(clean, series(runRollupBuildBundle, runRollupBuildDts))
 
 export { build }
 

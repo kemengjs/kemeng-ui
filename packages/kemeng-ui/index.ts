@@ -58,3 +58,15 @@ export * from './components/Drawer'
 
 export { default as Divider } from './components/Divider'
 export * from './components/Divider'
+
+export { default as Input } from './components/Input'
+export * from './components/Input'
+
+export { default as Select } from './components/Select'
+export * from './components/Select'
+
+export { default as FormControl } from './components/FormControl'
+export * from './components/FormControl'
+
+export { default as InputLabel } from './components/InputLabel'
+export * from './components/InputLabel'

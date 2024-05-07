@@ -7,17 +7,21 @@ import {
 	Drawer,
 	DrawerProps,
 	Fade,
+	Input,
 	Link,
 	List,
 	Menu,
 	MenuItem,
 	MenuList,
 	Modal,
+	Select,
 	Paper,
 	Popover,
 	PopoverProps,
 	ThemePrivder,
-	Typography
+	Typography,
+	FormControl,
+	InputLabel
 } from '@kemengjs/kemeng-ui'
 import { css } from '@linaria/atomic'
 import { Fragment, useState } from 'react'
@@ -274,6 +278,46 @@ function SimpleListMenu() {
 	)
 }
 
+function BasicSelect() {
+	const [age, setAge] = useState('')
+
+	const handleChange = event => {
+		setAge(event.target.value as string)
+	}
+
+	return (
+		<div
+			className={css`
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				margin-bottom: 1000px;
+			`}
+		>
+			<div
+				className={css`
+					min-width: 120px;
+				`}
+			>
+				<FormControl fullWidth>
+					<InputLabel id='demo-simple-select-label'>Age</InputLabel>
+					<Select
+						labelId='demo-simple-select-label'
+						id='demo-simple-select'
+						value={age}
+						label='Age'
+						onChange={handleChange}
+					>
+						<MenuItem value={10}>Ten</MenuItem>
+						<MenuItem value={20}>Twenty</MenuItem>
+						<MenuItem value={30}>Thirty</MenuItem>
+					</Select>
+				</FormControl>
+			</div>
+		</div>
+	)
+}
+
 export default function App() {
 	const [open, setOpen] = useState(false)
 	const handleClose = () => {
@@ -442,6 +486,11 @@ export default function App() {
 			<BasicMenu />
 			<SimpleListMenu />
 			<Divider variant='middle' />
+			<label data-shrink={false}>123</label>
+			<div>
+				<Input />
+			</div>
+			<BasicSelect />
 		</ThemePrivder>
 	)
 }

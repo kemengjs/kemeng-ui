@@ -17,7 +17,6 @@ import {
 	useRef,
 	useState
 } from 'react'
-import { withNativeElementProps } from '../../utils/nativeProps'
 import { useForkRef } from '../../hooks/useForkRef'
 import formControlState from '../FormControl/formControlState'
 import { useFormControl } from '../FormControl'
@@ -29,7 +28,16 @@ import { useTheme } from '../ThemePrivder'
 
 const k = getK('InputBase')
 
-export const InputBaseRoot = styled.div`
+export { k as InputBaseK }
+
+export type InputBaseRootProps = {
+	light?: boolean
+	color?: BaseColorType
+	transitionCss?: InputBaseProps['transitionCss']
+	formControl?: boolean
+}
+
+export const InputBaseRoot = styled.div<InputBaseRootProps>`
 	font-weight: ${themeVariables.typographyBody1.fontWeight};
 	font-size: ${themeVariables.typographyBody1.fontSize};
 	line-height: ${themeVariables.typographyBody1.lineHeight};
@@ -95,7 +103,7 @@ export const InputBaseComponent = styled.input<InputBaseComponentProps>`
 		opacity: ${({ light }) => {
 			return light ? 0.42 : 0.5
 		}};
-		transition: ${({ transitionCss }) => transitionCss};
+		transition: ${({ transitionCss }) => transitionCss.opacity};
 	}
 
 	&:focus {
@@ -106,6 +114,24 @@ export const InputBaseComponent = styled.input<InputBaseComponentProps>`
 	}
 	&::-webkit-search-decoration {
 		-webkit-appearance: none;
+	}
+
+	label[data-shrink='false'] + .${k('formControl')} & {
+		&::-webkit-input-placeholder,
+		&::-moz-placeholder,
+		&:-ms-input-placeholder,
+		&::-ms-input-placeholder {
+			opacity: 0 !important;
+		}
+
+		&:focus::-webkit-input-placeholder,
+		&:focus::-moz-placeholder,
+		&:focus:-ms-input-placeholder,
+		&:focus::-ms-input-placeholder {
+			opacity: ${({ light }) => {
+				return light ? 0.42 : 0.5
+			}};
+		}
 	}
 
 	&.${k('disabled')} {
@@ -135,7 +161,9 @@ export const InputBaseComponent = styled.input<InputBaseComponentProps>`
 `
 export type InputBaseComponentProps = HTMLAttributes<
 	HTMLInputElement | HTMLTextAreaElement
-> & { [arbitrary: string]: any }
+> & {
+	light?: boolean
+} & { [arbitrary: string]: any }
 
 export type InputBaseProps = {
 	'aria-describedby'?: string
@@ -148,6 +176,8 @@ export type InputBaseProps = {
 	error?: boolean
 	fullWidth?: boolean
 	id?: string
+	RootComponent?: typeof InputBaseRoot
+	InputComponent?: typeof InputBaseComponent
 	inputComponent?: ElementType<InputBaseComponentProps>
 	inputProps?: InputBaseComponentProps
 	inputRef?: Ref<any>
@@ -179,6 +209,7 @@ export type InputBaseProps = {
 	startAdornment?: ReactNode
 	type?: string
 	value?: unknown
+	transitionCss?: Record<string, string>
 } & Omit<
 	HTMLAttributes<HTMLDivElement>,
 	| 'children'
@@ -194,9 +225,6 @@ export type InputBaseProps = {
 const InputBase = forwardRef<HTMLDivElement, InputBaseProps>((p, ref) => {
 	const { theme, createTransition } = useTheme()
 	const light = theme.mode === 'light'
-	const transitionCss = createTransition('opacity', {
-		duration: theme.transition.shorter
-	})
 
 	const {
 		'aria-describedby': ariaDescribedby,
@@ -227,8 +255,21 @@ const InputBase = forwardRef<HTMLDivElement, InputBaseProps>((p, ref) => {
 		size,
 		startAdornment,
 		type = 'text',
-		value: valueProp
+		RootComponent,
+		InputComponent,
+		transitionCss,
+		className,
+		value: valueProp,
+		onInvalid,
+		...other
 	} = p
+
+	const transitionObj = {
+		...transitionCss,
+		opacity: createTransition('opacity', {
+			duration: theme.transition.shorter
+		})
+	}
 
 	const value = inputPropsProp.value != null ? inputPropsProp.value : valueProp
 	const { current: isControlled } = useRef(value != null)
@@ -390,10 +431,10 @@ const InputBase = forwardRef<HTMLDivElement, InputBaseProps>((p, ref) => {
 			onClick(event)
 		}
 	}
-	let InputComponent = inputComponent
+	let componentForInput = inputComponent
 	let inputProps = inputPropsProp
 
-	if (multiline && InputComponent === 'input') {
+	if (multiline && componentForInput === 'input') {
 		if (rows) {
 			if (process.env.NODE_ENV !== 'production') {
 				if (minRows || maxRows) {
@@ -417,7 +458,7 @@ const InputBase = forwardRef<HTMLDivElement, InputBaseProps>((p, ref) => {
 			}
 		}
 
-		InputComponent = TextareaAutosize
+		componentForInput = TextareaAutosize
 	}
 
 	const handleAutoFill = event => {
@@ -435,21 +476,32 @@ const InputBase = forwardRef<HTMLDivElement, InputBaseProps>((p, ref) => {
 		}
 	}, [formControl, startAdornment])
 
-	return withNativeElementProps(
-		p,
-		<InputBaseRoot
+	const Input = InputComponent || InputBaseComponent
+	const Root = RootComponent || InputBaseRoot
+
+	return (
+		<Root
 			ref={ref}
 			onClick={handleClick}
 			className={cx(
 				readOnly && 'kemenguiInputBase-readOnly',
-				disabled && k('disabled'),
+				fcs.disabled && k('disabled'),
+				fcs.error && k('error'),
+				fcs.focused && k('focused'),
 				multiline && k('multiline'),
-				fullWidth && k('fullWidth')
+				fullWidth && k('fullWidth'),
+				!!formControl && k('formControl'),
+				fcs.size === 'small' && k('small'),
+				className
 			)}
+			transitionCss={transitionObj}
+			formControl={!!formControl}
+			color={fcs.color || 'primary'}
+			{...other}
 		>
 			{startAdornment}
 			<FormControlContext.Provider value={null}>
-				<InputBaseComponent
+				<Input
 					aria-invalid={fcs.error}
 					aria-describedby={ariaDescribedby}
 					autoComplete={autoComplete}
@@ -466,24 +518,24 @@ const InputBase = forwardRef<HTMLDivElement, InputBaseProps>((p, ref) => {
 					value={value}
 					onKeyDown={onKeyDown}
 					onKeyUp={onKeyUp}
+					onInvalid={onInvalid}
 					type={type}
 					{...inputProps}
-					as={InputComponent}
+					as={componentForInput}
 					ref={handleInputRef}
 					className={cx(
 						readOnly && 'kemenguiInputBase-readOnly',
-						disabled && k('disabled'),
+						fcs.disabled && k('disabled'),
 						multiline && k('multiline'),
 						type === 'search' && k('search'),
-						size === 'small' && k('small'),
-						!!formControl && k('formControl'),
+						fcs.size === 'small' && k('small'),
 						inputProps.className
 					)}
 					onBlur={handleBlur}
 					onChange={handleChange}
 					onFocus={handleFocus}
 					light={light}
-					transitionCss={transitionCss}
+					transitionCss={transitionObj}
 				/>
 			</FormControlContext.Provider>
 			{endAdornment}
@@ -493,7 +545,7 @@ const InputBase = forwardRef<HTMLDivElement, InputBaseProps>((p, ref) => {
 						startAdornment
 					})
 				: null}
-		</InputBaseRoot>
+		</Root>
 	)
 })
 
