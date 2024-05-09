@@ -139,6 +139,8 @@ const OutlinedInput = forwardRef<HTMLDivElement, OutlinedInputProps>(
 
 		const { theme } = useTheme()
 
+		console.log('outtt', OutlinedInputInput)
+
 		return (
 			<InputBase
 				RootComponent={OutlinedInputRoot}

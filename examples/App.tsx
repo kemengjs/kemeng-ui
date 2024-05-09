@@ -23,8 +23,15 @@ import {
 	FormControl,
 	InputLabel
 } from '@kemengjs/kemeng-ui'
-import { css } from '@linaria/atomic'
-import { Fragment, useState } from 'react'
+import { CSSProperties, css, styled } from '@linaria/atomic'
+import {
+	Fragment,
+	ReactElement,
+	ReactNode,
+	cloneElement,
+	forwardRef,
+	useState
+} from 'react'
 
 function VirtualElementPopover() {
 	const [open, setOpen] = useState(false)
@@ -318,6 +325,31 @@ function BasicSelect() {
 	)
 }
 
+type CAProps = {
+	isWang?: boolean
+	style?: CSSProperties
+	className: string
+	children: ReactNode
+	focused?: boolean
+}
+
+const ComponentA = forwardRef<HTMLDivElement, CAProps>((p, ref) => {
+	const { isWang, children, ...other } = p
+
+	console.log('p', p)
+
+	return (
+		<div ref={ref} {...other}>
+			{isWang ? 'tianxia' : 'wudi'}
+			{children}
+		</div>
+	)
+})
+
+export function withComponentToAs(as: ReactElement, element: ReactElement) {
+	return cloneElement(as, element.props)
+}
+
 export default function App() {
 	const [open, setOpen] = useState(false)
 	const handleClose = () => {
@@ -487,9 +519,9 @@ export default function App() {
 			<SimpleListMenu />
 			<Divider variant='middle' />
 			<label data-shrink={false}>123</label>
-			<div>
+			{/* <div>
 				<Input />
-			</div>
+			</div> */}
 			<BasicSelect />
 		</ThemePrivder>
 	)

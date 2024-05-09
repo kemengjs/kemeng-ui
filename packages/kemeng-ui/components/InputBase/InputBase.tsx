@@ -25,6 +25,7 @@ import useEnhancedEffect from '../../hooks/useEnhancedEffect'
 import TextareaAutosize from '../TextareaAutosize'
 import FormControlContext from '../FormControl/FormControlContext'
 import { useTheme } from '../ThemePrivder'
+import { withComponentToAs } from '../../utils/nativeProps'
 
 const k = getK('InputBase')
 
@@ -431,10 +432,10 @@ const InputBase = forwardRef<HTMLDivElement, InputBaseProps>((p, ref) => {
 			onClick(event)
 		}
 	}
-	let componentForInput = inputComponent
+	let ComponentForInput = inputComponent
 	let inputProps = inputPropsProp
 
-	if (multiline && componentForInput === 'input') {
+	if (multiline && ComponentForInput === 'input') {
 		if (rows) {
 			if (process.env.NODE_ENV !== 'production') {
 				if (minRows || maxRows) {
@@ -458,7 +459,7 @@ const InputBase = forwardRef<HTMLDivElement, InputBaseProps>((p, ref) => {
 			}
 		}
 
-		componentForInput = TextareaAutosize
+		ComponentForInput = TextareaAutosize
 	}
 
 	const handleAutoFill = event => {
@@ -478,6 +479,8 @@ const InputBase = forwardRef<HTMLDivElement, InputBaseProps>((p, ref) => {
 
 	const Input = InputComponent || InputBaseComponent
 	const Root = RootComponent || InputBaseRoot
+
+	console.log('Input', Input, Root, ComponentForInput)
 
 	return (
 		<Root
@@ -501,42 +504,44 @@ const InputBase = forwardRef<HTMLDivElement, InputBaseProps>((p, ref) => {
 		>
 			{startAdornment}
 			<FormControlContext.Provider value={null}>
-				<Input
-					aria-invalid={fcs.error}
-					aria-describedby={ariaDescribedby}
-					autoComplete={autoComplete}
-					autoFocus={autoFocus}
-					defaultValue={defaultValue}
-					disabled={fcs.disabled}
-					id={id}
-					onAnimationStart={handleAutoFill}
-					name={name}
-					placeholder={placeholder}
-					readOnly={readOnly}
-					required={fcs.required}
-					rows={rows}
-					value={value}
-					onKeyDown={onKeyDown}
-					onKeyUp={onKeyUp}
-					onInvalid={onInvalid}
-					type={type}
-					{...inputProps}
-					as={componentForInput}
-					ref={handleInputRef}
-					className={cx(
-						readOnly && 'kemenguiInputBase-readOnly',
-						fcs.disabled && k('disabled'),
-						multiline && k('multiline'),
-						type === 'search' && k('search'),
-						fcs.size === 'small' && k('small'),
-						inputProps.className
-					)}
-					onBlur={handleBlur}
-					onChange={handleChange}
-					onFocus={handleFocus}
-					light={light}
-					transitionCss={transitionObj}
-				/>
+				{withComponentToAs(
+					<ComponentForInput />,
+					<Input
+						aria-invalid={fcs.error}
+						aria-describedby={ariaDescribedby}
+						autoComplete={autoComplete}
+						autoFocus={autoFocus}
+						defaultValue={defaultValue}
+						disabled={fcs.disabled}
+						id={id}
+						onAnimationStart={handleAutoFill}
+						name={name}
+						placeholder={placeholder}
+						readOnly={readOnly}
+						required={fcs.required}
+						rows={rows}
+						value={value}
+						onKeyDown={onKeyDown}
+						onKeyUp={onKeyUp}
+						onInvalid={onInvalid}
+						type={type}
+						{...inputProps}
+						ref={handleInputRef}
+						className={cx(
+							readOnly && 'kemenguiInputBase-readOnly',
+							fcs.disabled && k('disabled'),
+							multiline && k('multiline'),
+							type === 'search' && k('search'),
+							fcs.size === 'small' && k('small'),
+							inputProps.className
+						)}
+						onBlur={handleBlur}
+						onChange={handleChange}
+						onFocus={handleFocus}
+						light={light}
+						transitionCss={transitionObj}
+					/>
+				)}
 			</FormControlContext.Provider>
 			{endAdornment}
 			{renderSuffix

@@ -31,7 +31,10 @@ import { useForkRef } from '../../hooks/useForkRef'
 import Menu, { MenuProps } from '../Menu'
 import { isFilled } from '../../utils/input'
 import { ownerDocument } from '../../utils/ownerDocument'
-import { NativeJSXElementsWithoutRef } from '../../utils/nativeProps'
+import {
+	NativeJSXElementsWithoutRef,
+	withComponentToAs
+} from '../../utils/nativeProps'
 import { useId } from '../../hooks/useId'
 import { useTheme } from '../ThemePrivder'
 
@@ -161,6 +164,7 @@ const SelectInput = forwardRef<HTMLInputElement, SelectInputProps>((p, ref) => {
 		value: valueProp,
 		variant = 'standard',
 		nativeInputClassName,
+		style,
 		iconClassName,
 		...other
 	} = p
@@ -511,6 +515,7 @@ const SelectInput = forwardRef<HTMLInputElement, SelectInputProps>((p, ref) => {
 					variant === 'outlined' && k('outlined'),
 					className
 				)}
+				style={style}
 				// The id is required for proper a11y
 				id={buttonId}
 				light={theme.mode === 'light'}

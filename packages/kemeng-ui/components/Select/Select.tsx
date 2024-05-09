@@ -17,7 +17,7 @@ import formControlState from '../FormControl/formControlState'
 import OutlinedInput from '../OutlinedInput'
 import FilledInput from '../FilledInput'
 import { useForkRef } from '../../hooks/useForkRef'
-import { cx } from '@linaria/atomic'
+import { cx, styled } from '@linaria/atomic'
 
 export type SelectVariants = 'outlined' | 'standard' | 'filled'
 export type SelectProps<Value = unknown> = {
@@ -127,47 +127,7 @@ const Select = forwardRef<Element, SelectProps>((p, ref) => {
 
 	const inputComponentRef = useForkRef(ref, InputComponent.ref)
 
-	console.log(
-		'IconComponent',
-		InputComponent,
-		cloneElement(InputComponent, {
-			// Most of the logic is implemented in `SelectInput`.
-			// The `Select` component is a simple API wrapper to expose something better to play with.
-			inputComponent,
-			inputProps: {
-				children,
-				error: fcs.error,
-				IconComponent,
-				variant,
-				type: undefined, // We render a select. We can ignore the type provided by the `Input`.
-				multiple,
-				...(native
-					? { id }
-					: {
-							autoWidth,
-							defaultOpen,
-							displayEmpty,
-							labelId,
-							MenuProps,
-							onClose,
-							onOpen,
-							open,
-							renderValue,
-							SelectDisplayProps: { id, ...SelectDisplayProps }
-						}),
-				...inputProps,
-				...(input ? input.props.inputProps : {})
-			},
-			...(((multiple && native) || displayEmpty) && variant === 'outlined'
-				? { notched: true }
-				: {}),
-			ref: inputComponentRef,
-			className: cx(InputComponent.props.className, className),
-			// If a custom input is provided via 'input' prop, do not allow 'variant' to be propagated to it's root element. See https://github.com/mui/material-ui/issues/33894.
-			...(!input && { variant }),
-			...other
-		})
-	)
+	console.log('InputComponent', InputComponent, native, inputComponent)
 
 	return (
 		<>

@@ -1,5 +1,5 @@
 import { cx } from '@linaria/atomic'
-import React from 'react'
+import React, { cloneElement } from 'react'
 import type { AnchorHTMLAttributes, CSSProperties, ReactElement } from 'react'
 
 export type NativeProps<S extends string = never> = {
@@ -24,7 +24,7 @@ export function withNativeProps<P extends NativeProps>(
 		}
 	}
 
-	return React.cloneElement(element, p)
+	return cloneElement(element, p)
 }
 
 export type NativeElementProps = Omit<AnchorHTMLAttributes<Element>, 'ref'>
@@ -47,7 +47,7 @@ export function withNativeElementProps<P extends NativeElementProps>(
 		}
 	}
 
-	return React.cloneElement(element, p)
+	return cloneElement(element, p)
 }
 
 export type NativeJSXElementsWithoutRef<T extends keyof JSX.IntrinsicElements> =
@@ -80,5 +80,19 @@ export function withNativeContextProps<P extends NativeElementProps>(
 		}
 	}
 
-	return React.cloneElement(element, contextProps)
+	return cloneElement(element, contextProps)
+}
+
+export function withComponentToAs(as: ReactElement, element: ReactElement) {
+	const p = {
+		...element.props
+	}
+	console.log('as.props.className, element.props.className', as, element)
+	p.className = cx(as.props.className, element.props.className)
+	p.style = {
+		...(as.props.style || {}),
+		...(element.props.style || {})
+	}
+
+	return cloneElement(as, p)
 }

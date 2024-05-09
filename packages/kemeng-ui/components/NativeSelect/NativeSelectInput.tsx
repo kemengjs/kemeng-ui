@@ -2,7 +2,10 @@ import { cx, styled } from '@linaria/atomic'
 import { getK } from '../../utils/style'
 import { themeVariables } from '../../utils'
 import { CSSProperties, ElementType, forwardRef } from 'react'
-import { NativeJSXElementsWithoutRef } from '../../utils/nativeProps'
+import {
+	NativeJSXElementsWithoutRef,
+	withComponentToAs
+} from '../../utils/nativeProps'
 import { useTheme } from '../ThemePrivder'
 
 const k = getK('NativeSelectInput')
@@ -140,17 +143,19 @@ const NativeSelectInput = forwardRef<HTMLSelectElement, NativeSelectInputProps>(
 					ref={ref}
 					{...other}
 				/>
-				{multiple ? null : (
-					<NativeSelectIcon
-						as={IconComponent}
-						className={cx(
-							disabled && k('disabled'),
-							variant === 'filled' && k('filled'),
-							variant === 'outlined' && k('outlined'),
-							IconComponentClassName
+				{multiple
+					? null
+					: withComponentToAs(
+							<IconComponent />,
+							<NativeSelectIcon
+								className={cx(
+									disabled && k('disabled'),
+									variant === 'filled' && k('filled'),
+									variant === 'outlined' && k('outlined'),
+									IconComponentClassName
+								)}
+							/>
 						)}
-					/>
-				)}
 			</>
 		)
 	}
