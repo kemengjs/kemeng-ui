@@ -54,7 +54,9 @@ const ThemePrivder: FC<ThemePrivderProps> = props => {
 				}`}
 				{globalCssText}
 			</style>
-			{children}
+			<div className={theme.mode === 'light' ? 'theme-light' : 'theme-dark'}>
+				{children}
+			</div>
 		</ThemeContext.Provider>
 	)
 }

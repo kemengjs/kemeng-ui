@@ -1,4 +1,4 @@
-import { cx, styled } from '@linaria/atomic'
+import { css, cx, styled } from '@linaria/atomic'
 import { BaseColorType, themeVariables } from '../../utils'
 import { getK } from '../../utils/style'
 import {
@@ -24,17 +24,13 @@ import { isFilled } from '../../utils/input'
 import useEnhancedEffect from '../../hooks/useEnhancedEffect'
 import TextareaAutosize from '../TextareaAutosize'
 import FormControlContext from '../FormControl/FormControlContext'
-import { useTheme } from '../ThemePrivder'
-import { withComponentToAs } from '../../utils/nativeProps'
 
 const k = getK('InputBase')
 
 export { k as InputBaseK }
 
 export type InputBaseRootProps = {
-	light?: boolean
 	color?: BaseColorType
-	transitionCss?: InputBaseProps['transitionCss']
 	formControl?: boolean
 }
 
@@ -66,7 +62,11 @@ export const InputBaseRoot = styled.div<InputBaseRootProps>`
 	}
 `
 
-export const InputBaseComponent = styled.input<InputBaseComponentProps>`
+export type InputBaseComponentProps = HTMLAttributes<
+	HTMLInputElement | HTMLTextAreaElement
+> & { [arbitrary: string]: any }
+
+export const InputBaseComponentCss = css`
 	font: inherit;
 	letter-spacing: inherit;
 	color: currentColor;
@@ -101,10 +101,16 @@ export const InputBaseComponent = styled.input<InputBaseComponentProps>`
 	&:-ms-input-placeholder,
 	&::-ms-input-placeholder {
 		color: currentColor;
-		opacity: ${({ light }) => {
-			return light ? 0.42 : 0.5
-		}};
-		transition: ${({ transitionCss }) => transitionCss.opacity};
+
+		.theme-light & {
+			opacity: 0.42;
+		}
+		.theme-dark & {
+			opacity: 0.5;
+		}
+
+		transition: opacity ${themeVariables.transition.shorter}
+			${themeVariables.transition.easeInOut} 0ms;
 	}
 
 	&:focus {
@@ -129,9 +135,12 @@ export const InputBaseComponent = styled.input<InputBaseComponentProps>`
 		&:focus::-moz-placeholder,
 		&:focus:-ms-input-placeholder,
 		&:focus::-ms-input-placeholder {
-			opacity: ${({ light }) => {
-				return light ? 0.42 : 0.5
-			}};
+			.theme-light & {
+				opacity: 0.42;
+			}
+			.theme-dark & {
+				opacity: 0.5;
+			}
 		}
 	}
 
@@ -160,11 +169,6 @@ export const InputBaseComponent = styled.input<InputBaseComponentProps>`
 		-moz-appearance: textfield;
 	}
 `
-export type InputBaseComponentProps = HTMLAttributes<
-	HTMLInputElement | HTMLTextAreaElement
-> & {
-	light?: boolean
-} & { [arbitrary: string]: any }
 
 export type InputBaseProps = {
 	'aria-describedby'?: string
@@ -178,7 +182,7 @@ export type InputBaseProps = {
 	fullWidth?: boolean
 	id?: string
 	RootComponent?: typeof InputBaseRoot
-	InputComponent?: typeof InputBaseComponent
+	InputComponentCss?: typeof InputBaseComponentCss
 	inputComponent?: ElementType<InputBaseComponentProps>
 	inputProps?: InputBaseComponentProps
 	inputRef?: Ref<any>
@@ -210,7 +214,6 @@ export type InputBaseProps = {
 	startAdornment?: ReactNode
 	type?: string
 	value?: unknown
-	transitionCss?: Record<string, string>
 } & Omit<
 	HTMLAttributes<HTMLDivElement>,
 	| 'children'
@@ -224,9 +227,6 @@ export type InputBaseProps = {
 >
 
 const InputBase = forwardRef<HTMLDivElement, InputBaseProps>((p, ref) => {
-	const { theme, createTransition } = useTheme()
-	const light = theme.mode === 'light'
-
 	const {
 		'aria-describedby': ariaDescribedby,
 		autoComplete,
@@ -257,20 +257,12 @@ const InputBase = forwardRef<HTMLDivElement, InputBaseProps>((p, ref) => {
 		startAdornment,
 		type = 'text',
 		RootComponent,
-		InputComponent,
-		transitionCss,
+		InputComponentCss,
 		className,
 		value: valueProp,
 		onInvalid,
 		...other
 	} = p
-
-	const transitionObj = {
-		...transitionCss,
-		opacity: createTransition('opacity', {
-			duration: theme.transition.shorter
-		})
-	}
 
 	const value = inputPropsProp.value != null ? inputPropsProp.value : valueProp
 	const { current: isControlled } = useRef(value != null)
@@ -477,10 +469,8 @@ const InputBase = forwardRef<HTMLDivElement, InputBaseProps>((p, ref) => {
 		}
 	}, [formControl, startAdornment])
 
-	const Input = InputComponent || InputBaseComponent
+	const InputCss = InputComponentCss || InputBaseComponentCss
 	const Root = RootComponent || InputBaseRoot
-
-	console.log('Input', Input, Root, ComponentForInput)
 
 	return (
 		<Root
@@ -497,51 +487,47 @@ const InputBase = forwardRef<HTMLDivElement, InputBaseProps>((p, ref) => {
 				fcs.size === 'small' && k('small'),
 				className
 			)}
-			transitionCss={transitionObj}
 			formControl={!!formControl}
 			color={fcs.color || 'primary'}
 			{...other}
 		>
 			{startAdornment}
 			<FormControlContext.Provider value={null}>
-				{withComponentToAs(
-					<ComponentForInput />,
-					<Input
-						aria-invalid={fcs.error}
-						aria-describedby={ariaDescribedby}
-						autoComplete={autoComplete}
-						autoFocus={autoFocus}
-						defaultValue={defaultValue}
-						disabled={fcs.disabled}
-						id={id}
-						onAnimationStart={handleAutoFill}
-						name={name}
-						placeholder={placeholder}
-						readOnly={readOnly}
-						required={fcs.required}
-						rows={rows}
-						value={value}
-						onKeyDown={onKeyDown}
-						onKeyUp={onKeyUp}
-						onInvalid={onInvalid}
-						type={type}
-						{...inputProps}
-						ref={handleInputRef}
-						className={cx(
-							readOnly && 'kemenguiInputBase-readOnly',
-							fcs.disabled && k('disabled'),
-							multiline && k('multiline'),
-							type === 'search' && k('search'),
-							fcs.size === 'small' && k('small'),
-							inputProps.className
-						)}
-						onBlur={handleBlur}
-						onChange={handleChange}
-						onFocus={handleFocus}
-						light={light}
-						transitionCss={transitionObj}
-					/>
-				)}
+				<ComponentForInput
+					aria-invalid={fcs.error}
+					aria-describedby={ariaDescribedby}
+					autoComplete={autoComplete}
+					autoFocus={autoFocus}
+					defaultValue={defaultValue}
+					disabled={fcs.disabled}
+					id={id}
+					onAnimationStart={handleAutoFill}
+					name={name}
+					placeholder={placeholder}
+					readOnly={readOnly}
+					required={fcs.required}
+					// @ts-ignore
+					rows={rows}
+					value={value}
+					onKeyDown={onKeyDown}
+					onKeyUp={onKeyUp}
+					onInvalid={onInvalid}
+					type={type}
+					{...inputProps}
+					ref={handleInputRef}
+					className={cx(
+						readOnly && 'kemenguiInputBase-readOnly',
+						fcs.disabled && k('disabled'),
+						multiline && k('multiline'),
+						type === 'search' && k('search'),
+						fcs.size === 'small' && k('small'),
+						InputCss,
+						inputProps.className
+					)}
+					onBlur={handleBlur}
+					onChange={handleChange}
+					onFocus={handleFocus}
+				/>
 			</FormControlContext.Provider>
 			{endAdornment}
 			{renderSuffix

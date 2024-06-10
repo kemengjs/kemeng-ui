@@ -1,11 +1,8 @@
-import { cx, styled } from '@linaria/atomic'
+import { css, cx, styled } from '@linaria/atomic'
 import { getK } from '../../utils/style'
 import { themeVariables } from '../../utils'
 import { CSSProperties, ElementType, forwardRef } from 'react'
-import {
-	NativeJSXElementsWithoutRef,
-	withComponentToAs
-} from '../../utils/nativeProps'
+import { NativeJSXElementsWithoutRef } from '../../utils/nativeProps'
 import { useTheme } from '../ThemePrivder'
 
 const k = getK('NativeSelectInput')
@@ -22,9 +19,16 @@ export const getNativeSelectSelectStyles = (
 		WebkitAppearance: 'none',
 		userSelect: 'none',
 		borderRadius: 0,
+
 		cursor: 'pointer',
 		'&:focus': {
-			borderRadius: 0
+			borderRadius: 0,
+			'.theme-dark &': {
+				backgroundColor: 'rgba(255, 255, 255, 0.05)'
+			},
+			'.theme-light &': {
+				backgroundColor: 'rgba(0, 0, 0, 0.05)'
+			}
 		},
 		'&::-ms-expand': {
 			display: 'none'
@@ -102,7 +106,7 @@ export const getNativeSelectIconStyles = (
 
 const nativeSelectIconStyles = getNativeSelectIconStyles(k)
 
-const NativeSelectIcon = styled.svg`
+const NativeSelectIconCss = css`
 	${nativeSelectIconStyles}
 `
 
@@ -143,19 +147,17 @@ const NativeSelectInput = forwardRef<HTMLSelectElement, NativeSelectInputProps>(
 					ref={ref}
 					{...other}
 				/>
-				{multiple
-					? null
-					: withComponentToAs(
-							<IconComponent />,
-							<NativeSelectIcon
-								className={cx(
-									disabled && k('disabled'),
-									variant === 'filled' && k('filled'),
-									variant === 'outlined' && k('outlined'),
-									IconComponentClassName
-								)}
-							/>
+				{multiple ? null : (
+					<IconComponent
+						className={cx(
+							disabled && k('disabled'),
+							variant === 'filled' && k('filled'),
+							variant === 'outlined' && k('outlined'),
+							NativeSelectIconCss,
+							IconComponentClassName
 						)}
+					/>
+				)}
 			</>
 		)
 	}

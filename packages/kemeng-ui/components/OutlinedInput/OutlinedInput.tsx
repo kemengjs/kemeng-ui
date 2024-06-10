@@ -1,6 +1,6 @@
-import { cx, styled } from '@linaria/atomic'
+import { css, cx, styled } from '@linaria/atomic'
 import InputBase, {
-	InputBaseComponent,
+	InputBaseComponentCss,
 	InputBaseK,
 	InputBaseProps,
 	InputBaseRoot
@@ -11,7 +11,6 @@ import NotchedOutline from './NotchedOutline'
 import { forwardRef } from 'react'
 import { useFormControl } from '../FormControl'
 import formControlState from '../FormControl/formControlState'
-import { useTheme } from '../ThemePrivder'
 
 const k = getK('OutlinedInput')
 
@@ -28,8 +27,12 @@ const OutlinedInputRoot = styled(InputBaseRoot)`
 	@media (hover: none) {
 		&:hover {
 			.${k('notchedOutline')} {
-				border-color: ${({ light }) =>
-					light ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)'};
+				.theme-dark & {
+					border-color: rgba(255, 255, 255, 0.23);
+				}
+				.theme-light & {
+					border-color: rgba(0, 0, 0, 0.23);
+				}
 			}
 		}
 	}
@@ -65,21 +68,29 @@ const OutlinedInputRoot = styled(InputBaseRoot)`
 	}
 `
 
-type NotchedOutlineRootProps = {
-	light: boolean
-}
-const NotchedOutlineRoot = styled(NotchedOutline)<NotchedOutlineRootProps>`
-	border-color: ${({ light }) =>
-		light ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)'};
+const NotchedOutlineRoot = styled(NotchedOutline)`
+	.theme-dark & {
+		border-color: rgba(255, 255, 255, 0.23);
+	}
+	.theme-light & {
+		border-color: rgba(0, 0, 0, 0.23);
+	}
 `
 
-const OutlinedInputInput = styled(InputBaseComponent)`
+const OutlinedInputInputCss = css`
 	padding: 16.5px 14px;
 	&:-webkit-autofill {
-		-webkit-text-fill-color: ${({ light }) => (light ? 'none' : '#fff')};
-		-webkit-box-shadow: ${({ light }) =>
-			light ? 'none' : '0 0 0 100px #266798 inset'};
-		caret-color: ${({ light }) => (light ? 'none' : '#fff')};
+		.theme-dark & {
+			-webkit-text-fill-color: #fff;
+			-webkit-box-shadow: 0 0 0 100px #266798 inset;
+			caret-color: #fff;
+		}
+		.theme-light & {
+			-webkit-text-fill-color: none;
+			-webkit-box-shadow: none;
+			caret-color: none;
+		}
+
 		border-radius: inherit;
 	}
 
@@ -137,14 +148,10 @@ const OutlinedInput = forwardRef<HTMLDivElement, OutlinedInputProps>(
 			]
 		})
 
-		const { theme } = useTheme()
-
-		console.log('outtt', OutlinedInputInput)
-
 		return (
 			<InputBase
 				RootComponent={OutlinedInputRoot}
-				InputComponent={OutlinedInputInput}
+				InputComponentCss={cx(InputBaseComponentCss, OutlinedInputInputCss)}
 				inputProps={{
 					...inputProps,
 					className: cx(
@@ -156,7 +163,6 @@ const OutlinedInput = forwardRef<HTMLDivElement, OutlinedInputProps>(
 				}}
 				renderSuffix={state => (
 					<NotchedOutlineRoot
-						light={theme.mode === 'light'}
 						className={cx(k('notchedOutline'), notchedOutlineClassName)}
 						label={
 							label != null && label !== '' && fcs.required ? (
@@ -181,8 +187,7 @@ const OutlinedInput = forwardRef<HTMLDivElement, OutlinedInputProps>(
 					multiline && k('multiline'),
 					startAdornment && k('startAdornment'),
 					endAdornment && k('endAdornment'),
-					className,
-					'testasdasdasdasdasd'
+					className
 				)}
 				fullWidth={fullWidth}
 				inputComponent={inputComponent}

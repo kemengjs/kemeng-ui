@@ -1,4 +1,4 @@
-import { cx, styled } from '@linaria/atomic'
+import { css, cx, styled } from '@linaria/atomic'
 import { getK } from '../../utils/style'
 import {
 	getNativeSelectSelectStyles,
@@ -31,10 +31,7 @@ import { useForkRef } from '../../hooks/useForkRef'
 import Menu, { MenuProps } from '../Menu'
 import { isFilled } from '../../utils/input'
 import { ownerDocument } from '../../utils/ownerDocument'
-import {
-	NativeJSXElementsWithoutRef,
-	withComponentToAs
-} from '../../utils/nativeProps'
+import { NativeJSXElementsWithoutRef } from '../../utils/nativeProps'
 import { useId } from '../../hooks/useId'
 import { useTheme } from '../ThemePrivder'
 
@@ -48,11 +45,6 @@ type SelectSelectProps = {
 const SelectSelect = styled.div<SelectSelectProps>`
 	${NativeSelectSelectStyles};
 
-	&:focus {
-		background-color: ${({ light }) =>
-			light ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.05)'};
-	}
-
 	&.${k('select')} {
 		height: auto;
 		min-height: 1.4375em;
@@ -63,9 +55,10 @@ const SelectSelect = styled.div<SelectSelectProps>`
 `
 
 const nativeSelectIconStyles = getNativeSelectIconStyles(k)
-const SelectIcon = styled.svg`
+const SelectIconCss = css`
 	${nativeSelectIconStyles}
 `
+
 const SelectNativeInput = styled.input`
 	bottom: 0;
 	left: 0;
@@ -488,6 +481,7 @@ const SelectInput = forwardRef<HTMLInputElement, SelectInputProps>((p, ref) => {
 	}
 
 	const listboxId = useId()
+	console.log(';xxxx')
 
 	return (
 		<>
@@ -541,13 +535,13 @@ const SelectInput = forwardRef<HTMLInputElement, SelectInputProps>((p, ref) => {
 				autoFocus={autoFocus}
 				{...other}
 			/>
-			<SelectIcon
-				as={IconComponent}
+			<IconComponent
 				className={cx(
 					disabled && k('disabled'),
 					variant === 'filled' && k('filled'),
 					variant === 'outlined' && k('outlined'),
 					open && k('open'),
+					SelectIconCss,
 					iconClassName
 				)}
 			/>

@@ -1,6 +1,6 @@
-import { cx, styled } from '@linaria/atomic'
+import { css, cx, styled } from '@linaria/atomic'
 import InputBase, {
-	InputBaseComponent,
+	InputBaseComponentCss,
 	InputBaseK,
 	InputBaseProps,
 	InputBaseRoot
@@ -11,31 +11,52 @@ import { forwardRef } from 'react'
 
 const k = getK('FilledInput')
 
-const getBckgroundColor = (light: boolean) =>
-	light ? 'rgba(0, 0, 0, 0.06)' : 'rgba(255, 255, 255, 0.09)'
-
 const FilledInputRoot = styled(InputBaseRoot)`
 	position: relative;
-	background-color: ${({ light }) => getBckgroundColor(light)};
+	.theme-dark & {
+		background-color: rgba(255, 255, 255, 0.09);
+	}
+	.theme-light & {
+		background-color: rgba(0, 0, 0, 0.06);
+	}
 	border-top-left-radius: ${themeVariables.shape.borderRadius};
 	border-top-right-radius: ${themeVariables.shape.borderRadius};
-	transition: ${({ transitionCss }) => transitionCss['background-color']};
+	transition: background-color ${themeVariables.transition.short}
+		${themeVariables.transition.easeInOut} 0ms;
 
 	&:hover {
-		background-color: ${({ light }) =>
-			light ? 'rgba(0, 0, 0, 0.09)' : 'rgba(255, 255, 255, 0.13)'};
+		.theme-dark & {
+			background-color: rgba(255, 255, 255, 0.13);
+		}
+		.theme-light & {
+			background-color: rgba(0, 0, 0, 0.09);
+		}
 	}
 	@media (hover: none) {
-		background-color: ${({ light }) => getBckgroundColor(light)};
+		.theme-dark & {
+			background-color: rgba(255, 255, 255, 0.09);
+		}
+		.theme-light & {
+			background-color: rgba(0, 0, 0, 0.06);
+		}
 	}
 
 	&.${InputBaseK('focused')} {
-		background-color: ${({ light }) => getBckgroundColor(light)};
+		.theme-dark & {
+			background-color: rgba(255, 255, 255, 0.09);
+		}
+		.theme-light & {
+			background-color: rgba(0, 0, 0, 0.06);
+		}
 	}
 
 	&.${InputBaseK('disabled')} {
-		background-color: ${({ light }) =>
-			light ? 'rgba(0, 0, 0, 0.12)' : 'rgba(255, 255, 255, 0.12)'};
+		.theme-dark & {
+			background-color: rgba(255, 255, 255, 0.12);
+		}
+		.theme-light & {
+			background-color: rgba(0, 0, 0, 0.12);
+		}
 	}
 
 	&.${k('underline')} {
@@ -47,7 +68,8 @@ const FilledInputRoot = styled(InputBaseRoot)`
 			position: absolute;
 			right: 0;
 			transform: scaleX(0);
-			transition: ${({ transitionCss }) => transitionCss['transform']};
+			transition: transform ${themeVariables.transition.shorter}
+				${themeVariables.transition.easeOut} 0ms;
 			pointer-events: none;
 		}
 
@@ -65,18 +87,20 @@ const FilledInputRoot = styled(InputBaseRoot)`
 		}
 
 		&::before {
-			border-bottom: ${({ light }) => {
-				return '1px solid ' + light
-					? 'rgba(0, 0, 0, 0.42)'
-					: 'rgba(255, 255, 255, 0.7)'
-			}};
+			.theme-dark & {
+				border-bottom: 1px solid rgba(255, 255, 255, 0.7);
+			}
+			.theme-light & {
+				border-bottom: 1px solid rgba(0, 0, 0, 0.42);
+			}
+
 			left: 0;
 			bottom: 0;
 			content: '\\00a0';
 			position: absolute;
 			right: 0;
-			transition: ${({ transitionCss }) =>
-				transitionCss['border-bottom-color']};
+			transition: border-bottom-color ${themeVariables.transition.shorter}
+				${themeVariables.transition.easeInOut} 0ms;
 			pointer-events: none;
 		}
 
@@ -121,17 +145,24 @@ const FilledInputRoot = styled(InputBaseRoot)`
 	}
 `
 
-const FilledInputInput = styled(InputBaseComponent)`
+const FilledInputInputCss = css`
 	padding-top: 25px;
 	padding-right: 12px;
 	padding-bottom: 8px;
 	padding-left: 12px;
 
 	&:-webkit-autofill {
-		-webkit-text-fill-color: ${({ light }) => (light ? null : '#fff')};
-		-webkit-box-shadow: ${({ light }) =>
-			light ? null : '0 0 0 100px #266798 inset'};
-		caret-color: ${({ light }) => (light ? null : '#fff')};
+		.theme-dark & {
+			-webkit-text-fill-color: #fff;
+			-webkit-box-shadow: 0 0 0 100px #266798 inset;
+			caret-color: #fff;
+		}
+		.theme-light & {
+			-webkit-text-fill-color: none;
+			-webkit-box-shadow: none;
+			caret-color: none;
+		}
+
 		border-radius: inherit;
 	}
 
@@ -191,7 +222,7 @@ const FilledInput = forwardRef<HTMLDivElement, FilledInputProps>((p, ref) => {
 	return (
 		<InputBase
 			RootComponent={FilledInputRoot}
-			InputComponent={FilledInputInput}
+			InputComponentCss={cx(InputBaseComponentCss, FilledInputInputCss)}
 			fullWidth={fullWidth}
 			inputComponent={inputComponent}
 			startAdornment={startAdornment}

@@ -2,16 +2,14 @@ import { forwardRef } from 'react'
 
 import InputBase, {
 	InputBaseRoot,
-	InputBaseComponent as InputBaseInput,
 	InputBaseProps,
-	InputBaseK
+	InputBaseK,
+	InputBaseComponentCss
 } from '../InputBase/InputBase'
-import { cx, styled } from '@linaria/atomic'
+import { css, cx, styled } from '@linaria/atomic'
 import { getK, unit } from '../../utils/style'
 import { themeVariables } from '../../utils'
 import { withNativeElementProps } from '../../utils/nativeProps'
-import { useTheme } from '../ThemePrivder'
-import { getTransitionNum } from '../ThemePrivder/createTransition'
 
 const k = getK('Input')
 
@@ -35,7 +33,8 @@ const InputRoot = styled(InputBaseRoot)`
 			position: absolute;
 			right: 0;
 			transform: scaleX(0);
-			transition: ${({ transitionCss }) => transitionCss.transform};
+			transition: transform ${themeVariables.transition.shorter}
+				${themeVariables.transition.easeOut} 0ms;
 			pointer-events: none;
 		}
 
@@ -52,15 +51,19 @@ const InputRoot = styled(InputBaseRoot)`
 		}
 
 		&::before {
-			border-bottom: ${({ light }) =>
-				`1px solid ${light ? 'rgba(0, 0, 0, 0.42)' : 'rgba(255, 255, 255, 0.7)'}`};
+			.theme-light & {
+				border-bottom: 1px solid rgba(0, 0, 0, 0.42);
+			}
+			.theme-dark & {
+				border-bottom: 1px solid rgba(255, 255, 255, 0.7);
+			}
 
 			left: 0;
 			bottom: 0;
 			content: '\\00a0';
 			right: 0;
-			transition: ${({ transitionCss }) =>
-				transitionCss['border-bottom-color']};
+			transition: border-bottom-color ${themeVariables.transition.shorter}
+				${themeVariables.transition.easeInOut} 0ms;
 			pointer-events: none;
 		}
 
@@ -70,8 +73,12 @@ const InputRoot = styled(InputBaseRoot)`
 					border-bottom: 2px solid ${themeVariables.text.primary};
 
 					@media (hover: none) {
-						border-bottom: ${({ light }) =>
-							`1px solid ${light ? 'rgba(0, 0, 0, 0.42)' : 'rgba(255, 255, 255, 0.7)'}`};
+						.theme-light & {
+							border-bottom: 1px solid rgba(0, 0, 0, 0.42);
+						}
+						.theme-dark & {
+							border-bottom: 1px solid rgba(255, 255, 255, 0.7);
+						}
 					}
 				}
 			}
@@ -84,7 +91,7 @@ const InputRoot = styled(InputBaseRoot)`
 	}
 `
 
-const InputInput = styled(InputBaseInput)`
+const InputInputCss = css`
 	box-sizing: content-box;
 `
 
@@ -101,25 +108,11 @@ const Input = forwardRef<HTMLDivElement, InputProps>((p, ref) => {
 		type = 'text'
 	} = p
 
-	const { theme, createTransition } = useTheme()
-
-	const transitionCss = {
-		transform: createTransition('transform', {
-			duration: getTransitionNum(theme.transition.shorter),
-			easing: theme.transition.easeOut
-		}),
-
-		'border-bottom-color': createTransition('border-bottom-color', {
-			duration: getTransitionNum(theme.transition.shorter)
-		})
-	}
-
 	return withNativeElementProps(
 		p,
 		<InputBase
 			className={cx(disableUnderline && k('disableUnderline'))}
-			InputComponent={InputInput}
-			transitionCss={transitionCss}
+			InputComponentCss={cx(InputBaseComponentCss, InputInputCss)}
 			RootComponent={InputRoot}
 			inputComponent={inputComponent}
 			multiline={multiline}

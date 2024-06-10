@@ -82,17 +82,3 @@ export function withNativeContextProps<P extends NativeElementProps>(
 
 	return cloneElement(element, contextProps)
 }
-
-export function withComponentToAs(as: ReactElement, element: ReactElement) {
-	const p = {
-		...element.props
-	}
-	console.log('as.props.className, element.props.className', as, element)
-	p.className = cx(as.props.className, element.props.className)
-	p.style = {
-		...(as.props.style || {}),
-		...(element.props.style || {})
-	}
-
-	return cloneElement(as, p)
-}

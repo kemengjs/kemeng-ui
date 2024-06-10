@@ -45,7 +45,7 @@ const NotchedOutlineLegend = styled.legend<NotchedOutlineLegendProps>`
 		height: 11px;
 		font-size: 0.75em;
 		visibility: hidden;
-		max-width: 0.01;
+		max-width: 0.01px;
 		transition: ${({ transitionCss }) => {
 			return transitionCss['max-width-50']
 		}};
