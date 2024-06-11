@@ -174,6 +174,13 @@ export const light: ThemeOptions = {
 		lineHeight: 1.75,
 		letterSpacing: '0.02857em'
 	},
+	typographyCaption: {
+		fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+		fontWeight: 400,
+		fontSize: '0.75rem',
+		lineHeight: 1.66,
+		letterSpacing: '0.03333em'
+	},
 	spacing: '8px',
 	breakpoints: {
 		xs: '444px',
