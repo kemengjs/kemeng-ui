@@ -13,7 +13,6 @@ import { TransitionProps, themeVariables } from '../../utils'
 import Fade from '../Fade'
 import { useTheme } from '../ThemePrivder'
 import { getTransitionNum } from '../ThemePrivder/createTransition'
-import { NativeJSXElementsWithoutRef } from '../../utils/nativeProps'
 import Backdrop from '../Backdrop'
 import { useId } from '../../hooks/useId'
 import DialogContext from './DialogContext'
@@ -36,13 +35,13 @@ const DialogContainer = styled.div`
 	}
 	outline: 0;
 
-	.${k('paper')} {
+	&.${k('paper')} {
 		display: flex;
 		align-items: center;
 		justify-content: center;
 	}
 
-	.${k('body')} {
+	&.${k('body')} {
 		overflow-y: auto;
 		overflow-x: hidden;
 		text-align: center;
@@ -236,6 +235,7 @@ const Dialog = forwardRef<HTMLDivElement, DialogProps>((p, ref) => {
 			BackdropComponent={BackdropComponent}
 			BackdropProps={{ transitionDuration }}
 			onClose={onClose}
+			disableEscapeKeyDown={disableEscapeKeyDown}
 			open={open}
 			ref={ref}
 			onClick={handleBackdropClick}
@@ -251,7 +251,10 @@ const Dialog = forwardRef<HTMLDivElement, DialogProps>((p, ref) => {
 				{/* roles are applied via cloneElement from TransitionComponent */}
 				{/* roles needs to be applied on the immediate child of Modal or it'll inject one */}
 				<DialogContainer
-					className={cx(containerClassName)}
+					className={cx(
+						containerClassName,
+						scroll === 'paper' ? k('paper') : k('body')
+					)}
 					onMouseDown={handleMouseDown}
 				>
 					<PaperComponent
@@ -260,7 +263,18 @@ const Dialog = forwardRef<HTMLDivElement, DialogProps>((p, ref) => {
 						aria-describedby={ariaDescribedby}
 						aria-labelledby={ariaLabelledby}
 						{...PaperProps}
-						className={cx(PaperProps.className)}
+						className={cx(
+							PaperProps.className,
+							scroll === 'paper' ? k('paper') : k('body'),
+							!maxWidth && k('notMaxWidth'),
+							maxWidth === 'lg' && k('lg'),
+							maxWidth === 'md' && k('md'),
+							maxWidth === 'sm' && k('sm'),
+							maxWidth === 'xl' && k('xl'),
+							maxWidth === 'xs' && k('xs'),
+							fullWidth && k('fullWidth'),
+							fullScreen && k('fullScreen')
+						)}
 					>
 						<DialogContext.Provider value={dialogContextValue}>
 							{children}

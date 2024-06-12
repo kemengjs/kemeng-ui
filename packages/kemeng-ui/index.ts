@@ -79,3 +79,6 @@ export * from './components/Stack'
 
 export { default as TextField } from './components/TextField'
 export * from './components/TextField'
+
+export { default as Dialog } from './components/Dialog'
+export * from './components/Dialog'
