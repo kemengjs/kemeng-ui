@@ -22,16 +22,7 @@ export const getNativeSelectSelectStyles = (
 
 		cursor: 'pointer',
 		'&:focus': {
-			borderRadius: 0,
-			'.theme-dark &': {
-				backgroundColor: 'rgba(255, 255, 255, 0.05)'
-			},
-			'.theme-light &': {
-				backgroundColor: 'rgba(0, 0, 0, 0.05)'
-			}
-		},
-		'&::-ms-expand': {
-			display: 'none'
+			borderRadius: 0
 		},
 
 		[`&.${curK('disabled')}`]: {

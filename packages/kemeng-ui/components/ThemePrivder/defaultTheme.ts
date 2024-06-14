@@ -7,42 +7,48 @@ export const light: ThemeOptions = {
 		light: '#FF8A80',
 		dark: '#FF1744',
 		contrastText: '#fff',
-		mainRgb: '255, 82, 82'
+		mainRgb: '255, 82, 82',
+		lightRgb: '255, 138, 128'
 	},
 	secondary: {
 		main: '#29B6F6',
 		dark: '#039BE5',
 		light: '#81D4FA',
 		contrastText: '#fff',
-		mainRgb: '41, 182, 246'
+		mainRgb: '41, 182, 246',
+		lightRgb: '129, 212, 250'
 	},
 	warning: {
 		main: '#EF6C00',
 		dark: '#E65100',
 		light: '#F57C00',
 		contrastText: '#fff',
-		mainRgb: '239, 108, 0'
+		mainRgb: '239, 108, 0',
+		lightRgb: '245, 124, 0'
 	},
 	success: {
 		main: '#76FF03',
 		dark: '#64DD17',
 		light: '#B2FF59',
 		contrastText: '#000',
-		mainRgb: '118, 255, 3'
+		mainRgb: '118, 255, 3',
+		lightRgb: '178, 255, 89'
 	},
 	error: {
 		main: '#FF3D00',
 		dark: '#DD2C00',
 		light: '#FF6E40',
 		contrastText: '#fff',
-		mainRgb: '255, 61, 0'
+		mainRgb: '255, 61, 0',
+		lightRgb: '255, 110, 64'
 	},
 	info: {
 		main: '#FF4081',
 		dark: '#F50057',
 		light: '#FF80AB',
 		contrastText: '#fff',
-		mainRgb: '255, 64, 129'
+		mainRgb: '255, 64, 129',
+		lightRgb: '255, 128, 171'
 	},
 	background: {
 		paper: '#fff',
@@ -188,6 +194,10 @@ export const light: ThemeOptions = {
 		md: '900px',
 		lg: '1200px',
 		xl: '1536px'
+	},
+	grid: {
+		columnSpacing: '8px',
+		rowSpacing: '8px'
 	},
 	zIndex: {
 		appBar: 1100,

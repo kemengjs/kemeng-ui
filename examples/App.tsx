@@ -21,7 +21,14 @@ import {
 	ThemePrivder,
 	Typography,
 	FormControl,
-	InputLabel
+	InputLabel,
+	Dialog,
+	DialogTitle,
+	DialogContent,
+	DialogContentText,
+	DialogActions,
+	Stack,
+	Alert
 } from '@kemengjs/kemeng-ui'
 import { CSSProperties, css, styled } from '@linaria/atomic'
 import {
@@ -325,6 +332,63 @@ function BasicSelect() {
 	)
 }
 
+function AlertDialog() {
+	const [open, setOpen] = useState(false)
+
+	const handleClickOpen = () => {
+		setOpen(true)
+	}
+
+	const handleClose = () => {
+		setOpen(false)
+	}
+
+	return (
+		<>
+			<Button variant='outlined' onClick={handleClickOpen}>
+				Open alert dialog
+			</Button>
+			<Dialog
+				open={open}
+				onClose={handleClose}
+				aria-labelledby='alert-dialog-title'
+				aria-describedby='alert-dialog-description'
+			>
+				<DialogTitle id='alert-dialog-title'>
+					{"Use Google's location service?"}
+				</DialogTitle>
+				<DialogContent>
+					<DialogContentText id='alert-dialog-description'>
+						Let Google help apps determine location. This means sending
+						anonymous location data to Google, even when no apps are running.
+					</DialogContentText>
+				</DialogContent>
+				<DialogActions>
+					<Button onClick={handleClose}>Disagree</Button>
+					<Button onClick={handleClose} autoFocus>
+						Agree
+					</Button>
+				</DialogActions>
+			</Dialog>
+		</>
+	)
+}
+
+function BasicAlerts() {
+	return (
+		<Stack style={{ width: '330px' }} spacing={2}>
+			<Alert variant='standard' severity='success'>
+				This is a success Alert.
+			</Alert>
+			<Alert variant='standard' severity='info'>
+				This is an info Alert.
+			</Alert>
+			<Alert severity='warning'>This is a warning Alert.</Alert>
+			<Alert severity='error'>This is an error Alert.</Alert>
+		</Stack>
+	)
+}
+
 type CAProps = {
 	isWang?: boolean
 	style?: CSSProperties
@@ -522,6 +586,8 @@ export default function App() {
 			{/* <div>
 				<Input />
 			</div> */}
+			<AlertDialog />
+			<BasicAlerts />
 			<BasicSelect />
 		</ThemePrivder>
 	)

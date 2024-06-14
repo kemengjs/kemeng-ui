@@ -82,3 +82,18 @@ export * from './components/TextField'
 
 export { default as Dialog } from './components/Dialog'
 export * from './components/Dialog'
+
+export { default as DialogActions } from './components/DialogActions'
+export * from './components/DialogActions'
+
+export { default as DialogContent } from './components/DialogContent'
+export * from './components/DialogContent'
+
+export { default as DialogContentText } from './components/DialogContentText'
+export * from './components/DialogContentText'
+
+export { default as DialogTitle } from './components/DialogTitle'
+export * from './components/DialogTitle'
+
+export { default as Grid } from './components/Grid'
+export * from './components/Grid'

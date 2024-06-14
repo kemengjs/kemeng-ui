@@ -2,6 +2,7 @@ import { cx, styled } from '@linaria/atomic'
 import {
 	JSXElementConstructor,
 	ReactElement,
+	ReactNode,
 	forwardRef,
 	useMemo,
 	useRef
@@ -160,7 +161,8 @@ export type DialogProps = {
 	transitionDuration?: TransitionProps['timeout']
 	TransitionProps?: TransitionProps
 	containerClassName?: string
-} & ModalProps
+	children?: ReactNode
+} & Omit<ModalProps, 'children'>
 
 const Dialog = forwardRef<HTMLDivElement, DialogProps>((p, ref) => {
 	const { theme } = useTheme()

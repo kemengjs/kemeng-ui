@@ -35,7 +35,8 @@ const AlertRoot = styled(Paper)`
 
 	&.${k('standard')} {
 		color: ${({ color }) => themeVariables[color].main};
-		background-color: ${({ color }) => themeVariables[color].light};
+		background-color: ${({ color }) =>
+			`rgba(${themeVariables[color].mainRgb}, 0.2)`};
 		& .${AlertIcon} {
 			color: ${({ color }) => themeVariables[color].main};
 		}
@@ -105,7 +106,7 @@ export type AlertProps = {
 	 * @default 'alert'
 	 */
 	role?: string
-	iconMapping: Record<AlertColor, ReactNode>
+	iconMapping?: Record<AlertColor, ReactNode>
 	onClose?: (event: React.SyntheticEvent) => void
 	variant?: 'standard' | 'filled' | 'outlined'
 } & NativeJSXElementsWithoutRef<'div'>

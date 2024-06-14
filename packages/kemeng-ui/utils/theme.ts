@@ -5,6 +5,7 @@ export type ThemeColorTypeSub = {
 	dark: string
 	contrastText: string
 	mainRgb: string
+	lightRgb: string
 }
 
 export type TypographyType = {
@@ -93,6 +94,10 @@ export type ThemeOptions = {
 		drawer: number
 		modal: number
 	}
+	grid?: {
+		columnSpacing: string
+		rowSpacing: string
+	}
 	rtl?: string
 }
 
@@ -115,7 +120,8 @@ const getThemeColorTypeSub = (name: string) => {
 		light: `var(--${name}-light)`,
 		dark: `var(--${name}-dark)`,
 		contrastText: `var(--${name}-contrastText)`,
-		mainRgb: `var(--${name}-mainRgb)`
+		mainRgb: `var(--${name}-mainRgb)`,
+		lightRgb: `var(--${name}-lightRgb)`
 	}
 }
 
@@ -210,6 +216,10 @@ export const themeVariables: ThemeVariables = {
 		md: 'var(--breakpoints-md)',
 		lg: 'var(--breakpoints-lg)',
 		xl: 'var(--breakpoints-xl)'
+	},
+	grid: {
+		columnSpacing: 'var(--grid-columnSpacing)',
+		rowSpacing: 'var(--grid-rowSpacing)'
 	},
 	zIndex: {
 		appBar: 'var(--zIndex-appBar)',
