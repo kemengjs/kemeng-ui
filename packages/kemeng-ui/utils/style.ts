@@ -8,6 +8,9 @@ export const k = (styleName: string) => {
 
 export const getK = (componentName: string) => {
 	return (styleName: string) => {
+		if (!styleName) {
+			return ''
+		}
 		const firstChar = styleName.charAt(0).toUpperCase()
 		const restOfStyleName = styleName.slice(1)
 		const targetStyleName = firstChar + restOfStyleName
