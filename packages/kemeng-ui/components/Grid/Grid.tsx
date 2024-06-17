@@ -55,8 +55,8 @@ const GridContainerRoot = styled.div<GridProps>`
 	box-sizing: border-box;
 	min-width: 0px;
 	flex-direction: ${({ direction }) => direction};
-	margin: calc(${themeVariables.grid.rowSpacing} / -2)
-		calc(${themeVariables.grid.columnSpacing} / -2);
+	margin: calc(${themeVariables.grid.rowSpacing} * (var(--rowSpacingNum)) / -2)
+		calc(${themeVariables.grid.columnSpacing} * (var(--columnSpacingNum)) / -2);
 
 	&.${k('smRowSpacing')} {
 		@media (min-width: 600px) {
@@ -115,11 +115,10 @@ const GridContainerRoot = styled.div<GridProps>`
 	}
 `
 const GridItemRoot = styled.div<GridProps>`
-	display: flex;
 	box-sizing: border-box;
 	min-width: 0px;
-	margin: calc(${themeVariables.grid.rowSpacing} / 2)
-		calc(${themeVariables.grid.columnSpacing} / 2);
+	padding: calc(${themeVariables.grid.rowSpacing} * (var(--rowSpacingNum)) / 2)
+		calc(${themeVariables.grid.columnSpacing} * (var(--columnSpacingNum)) / 2);
 
 	&.${k('xsnumorauto')} {
 		width: ${({ xs, columns }) => {
