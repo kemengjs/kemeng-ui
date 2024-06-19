@@ -1,6 +1,6 @@
 {
   "name": "@kemengjs/kemeng-ui-plugin",
-  "version": "0.0.1-beta.1",
+  "version": "0.0.1-beta.2",
   "description": "kemeng-ui 插件",
   "scripts": {
     "dev": "rollup --config ../../rollup.config.js --watch",
@@ -9,6 +9,7 @@
   "main": "./dist/kemeng-ui-plugin.cjs",
   "module": "./dist/kemeng-ui-plugin.mjs",
   "types": "./dist/types/index.d.ts",
+  "typings": "./dist/types/index.d.ts",
   "exports": {
     "import": "./dist/kemeng-ui-plugin.mjs",
     "require": "./dist/kemeng-ui-plugin.cjs",
