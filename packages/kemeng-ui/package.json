@@ -1,6 +1,6 @@
 {
   "name": "@kemengjs/kemeng-ui",
-  "version": "0.0.1-beta.1",
+  "version": "0.0.1-beta.2",
   "description": "kemeng-ui 框架",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",

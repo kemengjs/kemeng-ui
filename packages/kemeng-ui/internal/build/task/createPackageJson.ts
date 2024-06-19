@@ -23,18 +23,18 @@ export const runCreateComponentPackageJson = async () => {
 	console.log('componentsNameArr', componentsNameArr)
 
 	componentsNameArr.forEach(componentName => {
-		if (componentName === 'Button') {
-			fs.writeFile(
-				resolve(path.join(componentsDirPath, componentName, `package.json`)),
-				componentPackageJsonTemplate,
-				'utf-8',
-				err => {
-					if (err) {
-						console.error(err)
-					}
+		// if (componentName === 'Button') {
+		fs.writeFile(
+			resolve(path.join(componentsDirPath, componentName, `package.json`)),
+			componentPackageJsonTemplate,
+			'utf-8',
+			err => {
+				if (err) {
+					console.error(err)
 				}
-			)
-		}
+			}
+		)
+		// }
 	})
 }
 
