@@ -7,6 +7,10 @@ import {
 	runRollupBuildBundle,
 	runRollupBuildDts
 } from './task/moduleBuild'
+import {
+	runCreateComponentPackageJson,
+	runCreateUtilsPackageJson
+} from './task/createPackageJson'
 
 const dev: TaskFunction = async cb => {
 	bundleWatch()
@@ -19,7 +23,12 @@ const clean: TaskFunction = cb => {
 	cb()
 }
 
-const build = series(clean, series(runRollupBuildBundle, runRollupBuildDts))
+const build = series(
+	clean,
+	parallel(runRollupBuildBundle, runRollupBuildDts),
+	parallel(runCreateComponentPackageJson, runCreateUtilsPackageJson)
+)
+// const build = series(runCreateComponentPackageJson, runCreateUtilsPackageJson)
 
 export { build }
 
