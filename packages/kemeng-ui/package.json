@@ -1,6 +1,6 @@
 {
   "name": "@kemengjs/kemeng-ui",
-  "version": "0.0.1-beta.5",
+  "version": "0.0.1-beta.6",
   "description": "kemeng-ui 框架",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "gulp --require ../../node_modules/@esbuild-kit/cjs-loader -f ./internal/build/gulpfile.ts --cwd ./ dev",
     "build": "gulp --require ../../node_modules/@esbuild-kit/cjs-loader -f ./internal/build/gulpfile.ts --cwd ./ build",
-    "publish": "pnpm run build && pnpm  -C ./dist exec npm publish --access public"
+    "publishVersion": "pnpm run build && pnpm  -C ./dist exec npm publish --access public"
   },
   "files": [
     "*"
