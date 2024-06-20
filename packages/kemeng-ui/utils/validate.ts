@@ -2,6 +2,14 @@ export function isObject<T = Record<any, any>>(val: unknown): val is T {
 	return val !== null && typeof val === 'object'
 }
 
+export const isBoolean = (value: unknown): value is boolean => {
+	return value === true || value === false
+}
+
+export const isNumber = (value: unknown): value is number => {
+	return typeof value == 'number'
+}
+
 export function isPromise(obj: unknown): obj is Promise<unknown> {
 	return (
 		!!obj && typeof obj === 'object' && typeof (obj as any).then === 'function'

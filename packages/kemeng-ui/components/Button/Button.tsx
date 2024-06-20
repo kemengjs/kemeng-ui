@@ -5,7 +5,6 @@ import {
 	forwardRef
 } from 'react'
 import { withNativeElementProps } from '../../utils/nativeProps'
-import { mergeProps } from '../../utils/withDefaultProps'
 import { cx, styled } from '@linaria/atomic'
 import { BaseColorType, themeVariables } from '../../utils'
 import { TouchRippleProps } from './TouchRipple'
@@ -36,17 +35,6 @@ export type ButtonProps = {
 	startIcon?: ReactNode
 	focusVisibleClassName?: string
 } & NativeButtonProps
-
-const defaultProps: ButtonProps = {
-	disableFocusRipple: false,
-	color: 'primary',
-	variant: 'contained',
-	type: 'button',
-	size: 'medium',
-	disabled: false,
-	disableTouchRipple: false,
-	centerRipple: false
-}
 
 const getSizeStyles = (small: string, large: string) => {
 	return {
@@ -177,28 +165,32 @@ const ButtonEndIcon = styled.span`
 	${commonIconStyles}
 `
 
-const Button = forwardRef<HTMLButtonElement, ButtonProps>((p, ref) => {
-	const props = mergeProps(defaultProps, p)
+const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
 	const {
-		disabled,
-		disableFocusRipple,
-		color,
+		disabled = false,
+		disableFocusRipple = false,
+		disableTouchRipple = false,
+		centerRipple = false,
+		color = 'primary',
 		focusVisibleClassName,
-		variant,
-		size,
+		variant = 'contained',
+		size = 'medium',
 		startIcon,
 		endIcon,
 		children,
-		fullWidth
+		fullWidth,
+		type = 'button'
 	} = props
 
 	return withNativeElementProps(
 		props,
 		<ButtonRoot
 			ref={ref}
-			type={props.type}
+			type={type}
 			disabled={disabled}
 			focusRipple={!disableFocusRipple}
+			disableTouchRipple={disableTouchRipple}
+			centerRipple={centerRipple}
 			focusVisibleClassName={cx(k('focusVisible'), focusVisibleClassName)}
 			color={color}
 			className={cx(

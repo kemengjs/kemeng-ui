@@ -1,6 +1,5 @@
 import {
 	OutputOptions,
-	Plugin,
 	RollupBuild,
 	RollupOptions,
 	RollupWatcherEvent,
@@ -17,7 +16,7 @@ import { nodeResolve } from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import dts from 'rollup-plugin-dts'
 import alias from '@rollup/plugin-alias'
-import peerDepsExternal from 'rollup-plugin-peer-deps-external'
+// import peerDepsExternal from 'rollup-plugin-peer-deps-external'
 
 // rollup 相关参数
 const componentsDirPath = 'components'
@@ -31,7 +30,7 @@ const componentsEntryMap = componentsNameArr.reduce((prev, cur) => {
 }, {})
 
 const commonPlugins = [
-	peerDepsExternal() as unknown as Plugin,
+	// peerDepsExternal() as unknown as Plugin,
 	alias({
 		entries: [
 			{

@@ -8,6 +8,7 @@ import {
 	runRollupBuildDts
 } from './task/moduleBuild'
 import {
+	runCopyPackageJson,
 	runCreateComponentPackageJson,
 	runCreateUtilsPackageJson
 } from './task/createPackageJson'
@@ -26,7 +27,11 @@ const clean: TaskFunction = cb => {
 const build = series(
 	clean,
 	parallel(runRollupBuildBundle, runRollupBuildDts),
-	parallel(runCreateComponentPackageJson, runCreateUtilsPackageJson)
+	parallel(
+		runCreateComponentPackageJson,
+		runCreateUtilsPackageJson,
+		runCopyPackageJson
+	)
 )
 // const build = series(runCreateComponentPackageJson, runCreateUtilsPackageJson)
 

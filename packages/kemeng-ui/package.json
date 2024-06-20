@@ -1,6 +1,6 @@
 {
   "name": "@kemengjs/kemeng-ui",
-  "version": "0.0.1-beta.3",
+  "version": "0.0.1-beta.4",
   "description": "kemeng-ui 框架",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
@@ -8,30 +8,13 @@
   "typings": "./dist/index.d.ts",
   "scripts": {
     "dev": "gulp --require ../../node_modules/@esbuild-kit/cjs-loader -f ./internal/build/gulpfile.ts --cwd ./ dev",
-    "build": "gulp --require ../../node_modules/@esbuild-kit/cjs-loader -f ./internal/build/gulpfile.ts --cwd ./ build"
+    "build": "gulp --require ../../node_modules/@esbuild-kit/cjs-loader -f ./internal/build/gulpfile.ts --cwd ./ build",
+    "publish": "pnpm  -C ./dist publish --access public"
   },
   "files": [
     "dist",
     "./package.json"
   ],
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
-    },
-    "./utils":{
-      "types": "./dist/utils/index.d.ts",
-      "import": "./dist/utils/index.mjs",
-      "require": "./dist/utils/index.cjs"
-    },
-    "./package.json": "./package.json",
-    "./*": {
-      "types": "./dist/components/*",
-      "import": "./dist/components/*",
-      "require": "./dist/components/*"
-    }
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/kemengjs/kemeng-ui.git"
@@ -47,7 +30,6 @@
     "@babel/preset-typescript": "^7.24.1",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^25.0.7",
-    "@types/lodash": "^4.17.0",
     "@types/react-transition-group": "^4.4.10",
     "picocolors": "^1.0.0",
     "ts-morph": "^22.0.0"
@@ -60,7 +42,6 @@
     "react-dom": "^17.0.0 || ^18.0.0"
   },
   "dependencies": {
-    "lodash": "^4.17.21",
     "react-transition-group": "^4.4.5"
   }
 }

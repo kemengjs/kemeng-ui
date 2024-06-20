@@ -6,7 +6,7 @@ import {
 	withNativeElementProps
 } from '../../utils/nativeProps'
 import { themeVariables } from '../../utils'
-import { isBoolean, isNumber, isObject } from 'lodash'
+import { isObject, isNumber, isBoolean } from '../../utils/validate'
 
 const k = getK('Grid')
 

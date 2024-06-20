@@ -2,17 +2,13 @@ import { FC, ReactNode, useMemo } from 'react'
 import { globalCssText } from './globalCss'
 import { ThemeOptions, themeVariables } from '@ui/utils/theme'
 import { light } from './defaultTheme'
-import { mergeProps } from '../../utils/withDefaultProps'
 import { isObject } from '../../utils/validate'
 import { ThemeContext } from './themeContext'
+import { assignObj } from '../../utils/assign'
 
 export type ThemePrivderProps = {
 	children?: ReactNode
 	theme?: ThemeOptions
-}
-
-const defaultProps: ThemePrivderProps = {
-	theme: light
 }
 
 const themeToText = (theme: ThemeOptions) => {
@@ -34,7 +30,8 @@ const themeToText = (theme: ThemeOptions) => {
 }
 
 const ThemePrivder: FC<ThemePrivderProps> = props => {
-	const { children, theme } = mergeProps(defaultProps, props)
+	const { theme: themeProps = {} as ThemeOptions, children } = props
+	const theme = assignObj<ThemeOptions>(light, themeProps)
 
 	const themeText = useMemo(() => {
 		return themeToText(theme)

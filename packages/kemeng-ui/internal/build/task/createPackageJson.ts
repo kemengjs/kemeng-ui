@@ -50,3 +50,15 @@ export const runCreateUtilsPackageJson = async () => {
 		}
 	)
 }
+
+export const runCopyPackageJson = async () => {
+	fs.copyFile(
+		resolve('./package.json'),
+		resolve('./dist/package.json'),
+		err => {
+			if (err) {
+				console.error(err)
+			}
+		}
+	)
+}
