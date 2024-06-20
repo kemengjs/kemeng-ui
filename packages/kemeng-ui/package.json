@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "gulp --require ../../node_modules/@esbuild-kit/cjs-loader -f ./internal/build/gulpfile.ts --cwd ./ dev",
     "build": "gulp --require ../../node_modules/@esbuild-kit/cjs-loader -f ./internal/build/gulpfile.ts --cwd ./ build",
-    "publish": "pnpm  -C ./dist exec npm publish --access public"
+    "publish": "pnpm run build && pnpm  -C ./dist exec npm publish --access public"
   },
   "files": [
     "*"
