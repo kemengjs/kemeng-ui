@@ -95,7 +95,12 @@ export default function kemengUIPlugin({
 			const [id] = url.split('?', 1)
 
 			// Do not transform ignored and generated files
-			if (url.includes('node_modules') || !filter(url) || id in cssLookup)
+			if (
+				(url.includes('node_modules') &&
+					!url.includes('@kemengjs/kemeng-ui')) ||
+				!filter(url) ||
+				id in cssLookup
+			)
 				return
 			const log = logger.extend('vite').extend(getFileIdx(id))
 			log('transform %s', id)

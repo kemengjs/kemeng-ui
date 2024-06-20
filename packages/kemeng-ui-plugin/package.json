@@ -1,6 +1,6 @@
 {
   "name": "@kemengjs/kemeng-ui-plugin",
-  "version": "0.0.1-beta.2",
+  "version": "0.0.1-beta.3",
   "description": "kemeng-ui 插件",
   "scripts": {
     "dev": "rollup --config ../../rollup.config.js --watch",
