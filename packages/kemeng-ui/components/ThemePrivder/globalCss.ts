@@ -14,7 +14,7 @@ b {
 body {
   margin: 0;
   color: rgba(0, 0, 0, 0.87);
-  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
   font-weight: 400;
   font-size: 1rem;
   line-height: 1.5;

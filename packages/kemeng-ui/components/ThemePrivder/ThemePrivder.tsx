@@ -39,18 +39,21 @@ const ThemePrivder: FC<ThemePrivderProps> = props => {
 
 	return (
 		<ThemeContext.Provider value={theme}>
-			<style>
-				{`html {${themeText}}`}
-				{`html {
+			<style
+				dangerouslySetInnerHTML={{
+					__html: `
+					html {${themeText}}
+					html {
 					-webkit-font-smoothing: antialiased;
 					-moz-osx-font-smoothing: grayscale;
 					box-sizing: border-box;
 					-webkit-text-size-adjust: 100%;
 					-webkit-print-color-scheme: ${themeVariables.mode};
-					color-scheme: ${themeVariables.mode}};
-				}`}
-				{globalCssText}
-			</style>
+					color-scheme: ${themeVariables.mode}};}
+					${globalCssText}
+					`
+				}}
+			></style>
 			<div className={theme.mode === 'light' ? 'theme-light' : 'theme-dark'}>
 				{children}
 			</div>
